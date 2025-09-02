@@ -85,6 +85,8 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
 }
 
 .section-title {
@@ -103,7 +105,7 @@
     border-radius: 20px;
     padding: 16px;
     backdrop-filter: blur(20px);
-    margin-bottom: 8px;
+    margin-bottom: 0px;
     min-height: 400px;
 }
 
@@ -113,6 +115,19 @@
     overflow-x: auto;
     scroll-behavior: smooth;
     padding-bottom: 8px;
+}
+
+/* Desktop: Change to vertical scrolling with 3 cards per row */
+@media (min-width: 1025px) {
+    .featured-events-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        max-height: 369px;
+        padding-right: 8px;
+    }
 }
 
 .featured-events-grid::-webkit-scrollbar {
@@ -138,8 +153,8 @@
     min-width: calc(33.333% - 14px);
     max-width: calc(33.333% - 14px);
     flex-shrink: 0;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: linear-gradient(135deg, #1e293b, #334155);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 20px;
     padding: 28px;
     backdrop-filter: blur(20px);
@@ -148,6 +163,15 @@
     position: relative;
     display: flex;
     flex-direction: column;
+}
+
+/* Desktop: Adjust card sizing for grid layout */
+@media (min-width: 1025px) {
+    .featured-event-card {
+        min-width: auto;
+        max-width: none;
+        width: 100%;
+    }
 }
 
 .featured-event-card:hover {
@@ -260,21 +284,13 @@
 
 
 /* Responsive breakpoints */
-@media (max-width: 1024px) {
+@media (max-width: 1024px) and (min-width: 769px) {
     .featured-event-card {
         min-width: calc(50% - 10px); /* 2 cards on tablet */
     }
 }
 
-@media (max-width: 768px) {
-    .featured-event-card {
-        min-width: calc(100% - 0px); /* 1 card on mobile */
-    }
-    
-    .featured-events-grid {
-        gap: 16px;
-    }
-}
+
 
 
 
@@ -338,7 +354,7 @@
     grid-template-columns: 1fr 1.2fr;
     gap: 16px;
     align-items: center;
-    background: linear-gradient(135deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 0.9));
+    background: linear-gradient(135deg, #1e293b, #334155);
     border: 1px solid rgba(51, 65, 85, 0.5);
     border-radius: 12px;
     padding: 12px;
@@ -367,6 +383,10 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+    height: 100%;
 }
 
 .events-layout > .events-two-column-row:first-of-type .split-hero-eyebrow {
@@ -391,6 +411,7 @@
 
 .events-layout > .events-two-column-row:first-of-type .split-hero-content .event-link-btn.small {
     align-self: flex-start;
+    margin-top: 8px;
 }
 
 /* Desktop-only: Make split hero card bigger */
@@ -412,19 +433,19 @@
     }
     
     .events-layout > .events-two-column-row:first-of-type .split-hero-eyebrow {
-        font-size: 15px;
+        font-size: 14px;
     }
     
     .events-layout > .events-two-column-row:first-of-type .split-hero-title {
-        font-size: 28px;
+        font-size: 20px;
     }
     
     .events-layout > .events-two-column-row:first-of-type .split-hero-subtext {
-        font-size: 18px;
+        font-size: 14px;
     }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1024px) and (min-width: 769px) {
     .events-layout > .events-two-column-row:first-of-type .split-hero-card {
         grid-template-columns: 1fr;
         min-height: 0;
@@ -494,17 +515,15 @@
 .project-updates-container {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 12px;
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
     scroll-behavior: smooth;
-    padding: 24px;
+    padding: 8px;
     align-items: stretch; /* Ensure children use full available width */
-    background: linear-gradient(145deg, rgba(15, 23, 42, 0.05), rgba(30, 41, 59, 0.03));
+    background: transparent;
     border-radius: 24px;
-    border: 1px solid rgba(148, 163, 184, 0.08);
-    backdrop-filter: blur(25px);
 }
 
 .project-updates-container::-webkit-scrollbar {
@@ -530,7 +549,7 @@
     grid-template-columns: 160px 1fr;
     gap: 20px;
     align-items: stretch;
-    background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
+    background: linear-gradient(135deg, #1e293b, #334155);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(148, 163, 184, 0.1);
     border-radius: 20px;
@@ -544,34 +563,11 @@
     min-height: 200px;
 }
 
-.project-update-banner::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 5px;
-    height: 100%;
-    background: linear-gradient(180deg, #10b981, #06b6d4);
-    opacity: 0.9;
-    border-radius: 0 3px 3px 0;
-}
+/* Removed left side border */
 
 
 
-.project-update-banner.completed::before {
-    background: linear-gradient(180deg, #10b981, #059669);
-    box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
-}
-
-.project-update-banner.in-progress::before {
-    background: linear-gradient(180deg, #f59e0b, #d97706);
-    box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
-}
-
-.project-update-banner.pending::before {
-    background: linear-gradient(180deg, #6b7280, #4b5563);
-    box-shadow: 0 0 20px rgba(107, 114, 128, 0.4);
-}
+/* Removed status-specific border styles */
 
 /* Removed status icon styles */
 
@@ -619,7 +615,7 @@
 }
 
 .update-description {
-    font-size: 14px;
+        font-size: 14px;
     line-height: 1.6;
     margin: 0;
     flex-grow: 1;
@@ -691,8 +687,12 @@
 }
 
 
-/* Mobile adjustments */
-@media (max-width: 1024px) {
+/* Tablet adjustments */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .events-page {
+        padding-top: 55px;
+    }
+    
     .project-update-banner {
         grid-template-columns: 1fr;
         grid-template-rows: auto auto;
@@ -710,8 +710,10 @@
     }
 }
 
-/* Minimal responsive fixes to prevent page breaking */
-@media (max-width: 1200px) {
+
+
+/* Desktop responsive fixes - only for desktop screens */
+@media (max-width: 1200px) and (min-width: 1025px) {
     .events-page {
         padding: 24px 20px;
     }
@@ -725,31 +727,33 @@
     }
 }
 
-@media (max-width: 768px) {
+/* Removed conflicting mobile styles - will be replaced with comprehensive mobile rewrite */
+
+/* Events page bottom spacing adjustments - Desktop only */
+@media (min-width: 1025px) {
     .events-page {
-        padding: 16px 12px;
+        padding-bottom: 0;
+        margin-bottom: 0;
     }
-    
-    .events-layout {
-        gap: 16px;
-    }
-    
-    .events-two-column-row {
-        gap: 16px;
-    }
-    
-    .events-column {
-        padding: 16px;
-    }
-}
 
-/* Events page bottom spacing adjustments */
-.events-page {
-    padding-bottom: 0;
-}
+    .events-page .featured-events-section {
+        padding-bottom: 0px;
+        margin-bottom: 0px;
+    }
 
-.events-page .featured-events-section {
-    padding-bottom: 0px;
+    .events-page .events-layout {
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+
+    /* Restore gaps between sections but remove bottom spacing from last elements */
+    .events-page .events-two-column-row {
+        margin-bottom: 6px;
+    }
+
+    .events-page .featured-events-section {
+        margin-bottom: 0px;
+    }
 }
 
 /* Removed duplicate Second Featured Events Section styles */
@@ -768,9 +772,9 @@
 .featured-event-card {
     position: relative;
     z-index: 2;
-    padding: 16px;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 16px;
+    background: linear-gradient(135deg, #1e293b, #334155);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
     backdrop-filter: blur(20px);
 }
@@ -789,7 +793,7 @@
 }
 
 .featured-event-card .event-time {
-        font-size: 14px;
+    font-size: 14px;
     color: var(--text-secondary);
     font-weight: 500;
 }
@@ -807,25 +811,30 @@
 
 
 .event-link-btn {
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 12px;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+    text-decoration: none;
+    display: inline-block;
+    letter-spacing: 0.5px;
 }
 
 .event-link-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 25px rgba(16, 185, 129, 0.3);
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+    transform: translateY(-1px);
 }
 
 .event-link-btn.small {
-    padding: 8px 16px;
+    padding: 10px 20px;
     font-size: 13px;
 }
 
@@ -834,7 +843,7 @@
 
 
 .event-card {
-    background: linear-gradient(135deg, #0f172a, #1e293b);
+    background: linear-gradient(135deg, #1e293b, #334155);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     padding: 20px;
@@ -1078,86 +1087,21 @@
     .events-main-content {
         gap: 24px;
     }
-    
-
 }
 
-@media (max-width: 768px) {
-    .events-page {
-        padding: 12px;
-    }
-    
-    .events-layout {
-        gap: 24px;
-    }
-    
-    .featured-events-section {
-        padding: 20px;
-    }
-    
-    .featured-events-grid {
-        gap: 16px;
-    }
-    
-    .featured-event-card {
-        padding: 20px;
-    }
-    
-    .events-two-column-row {
-        grid-template-columns: 1fr;
-        gap: 16px;
-    }
-    
-    .events-column {
-        padding: 20px;
-    }
+/* Removed conflicting mobile styles - will be replaced with comprehensive mobile rewrite */
     
     
     
 
-    
-    .section-title {
+
+.section-title {
         font-size: 20px;
         margin-bottom: 16px;
     }
-    
 
-    
 
-}
 
-@media (max-width: 480px) {
-    .events-page {
-        padding: 8px;
-    }
-    
-    .events-layout {
-        gap: 16px;
-    }
-    
-
-    
-    .featured-events-grid {
-        gap: 12px;
-    }
-    
-    .featured-event-card {
-        padding: 16px;
-    }
-    
-    .events-column {
-        padding: 16px;
-    }
-    
-
-    
-    .section-title {
-        font-size: 18px;
-        margin-bottom: 12px;
-    }
-    
-
-}
 
 .pagination-info {
     color: var(--text-secondary);
@@ -1186,7 +1130,7 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-        display: flex;
+    display: flex;
     align-items: center;
     gap: 8px;
     min-width: 120px;
@@ -1252,171 +1196,654 @@
         grid-template-columns: 1fr;
         gap: 24px;
     }
-    }
-    
-@media (max-width: 768px) {
+}
+
+/* ========================================
+   PERFECT MOBILE EVENTS PAGE - RESPONSIVE DESIGN
+   ======================================== */
+/* Tablet Devices - Perfect Responsive Layout */
+@media (max-width: 1024px) and (min-width: 769px) {
+    /* Events Page Container - Tablet Optimized */
     .events-page {
-        padding: 16px;
+        padding: 60px 16px 24px 16px;
         width: 100%;
+        max-width: 100vw;
+        box-sizing: border-box;
+        overflow-x: hidden;
     }
     
-    .events-main-grid {
-        grid-template-columns: 1fr;
+    /* Events Layout - Clean Stack */
+    .events-layout {
+    display: flex;
+    flex-direction: column;
         gap: 20px;
-        margin-bottom: 32px;
-    }
-    
-    .events-section {
-        padding: 20px;
-    }
-    
-    .section-header {
-        margin-bottom: 20px;
-    }
-    
-    .section-header h2 {
-        font-size: 18px;
-    }
-    
-    .events-grid {
-        gap: 16px;
-    }
-    
-    .event-card {
-        padding: 16px;
-    }
-    
-    .event-header {
-        margin-bottom: 14px;
-    }
-    
-    .event-image {
-        height: 100px;
-        margin-bottom: 14px;
-    }
-    
-    .event-title {
-        font-size: 15px;
-        margin-bottom: 8px;
-    }
-    
-    .event-description {
-        font-size: 12px;
-        margin-bottom: 12px;
-    }
-    
-    .event-meta {
-        gap: 12px;
-    }
-    
-    .events-pagination {
-        margin-top: 32px;
-        gap: 16px;
-        padding: 20px;
-    }
-    
-    .pagination-controls {
-        gap: 12px;
-    }
-    
-    .pagination-btn {
-        padding: 10px 16px;
-        font-size: 13px;
-        min-width: 100px;
-    }
-    
-    .page-number {
-        width: 36px;
-        height: 36px;
-        font-size: 13px;
-    }
-}
-
-@media (max-width: 480px) {
-    .events-page {
-        padding: 8px;
         width: 100%;
     }
     
-    .events-filters {
+    /* Featured Events Section - Tablet Container */
+    .featured-events-section {
         padding: 12px;
-        margin-bottom: 20px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        backdrop-filter: blur(20px);
+        width: 100%;
+        box-sizing: border-box;
     }
     
-    .event-card {
-        padding: 16px;
+    /* Featured Events Grid - Horizontal Scroll */
+    .featured-events-grid {
+    display: flex;
+        flex-direction: row;
+        gap: 16px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-behavior: smooth;
+        padding: 8px 0 12px 0;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
     }
     
-    .event-image {
-        height: 80px;
-    }
-    
-    .event-title {
-        font-size: 15px;
-    }
-    
-    .event-description {
-        font-size: 12px;
-    }
-    
-    .event-meta {
+    /* Featured Event Card - Tablet Perfect Fit */
+    .featured-event-card {
+        min-width: calc(50vw - 24px);
+        max-width: calc(50vw - 24px);
+        flex-shrink: 0;
+        scroll-snap-align: start;
+        padding: 18px;
+        min-height: 360px;
+        border-radius: 16px;
+        box-sizing: border-box;
+        background: linear-gradient(135deg, #1e293b, #334155);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 16px;
     }
     
-    .events-pagination {
+    /* Two Column Row - Stack Vertically */
+    .events-two-column-row {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+    }
+    
+    /* Events Columns - Tablet Containers */
+    .events-column {
         padding: 12px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        min-height: auto;
+        width: 100%;
+        backdrop-filter: blur(20px);
+        box-sizing: border-box;
+    }
+    
+    /* Section Titles - Tablet Typography */
+    .section-title {
+        font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+        margin-bottom: 16px;
+        text-align: left;
+    }
+    
+    /* Split Hero Card - Upcoming Events Tablet */
+    .split-hero-card {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px;
+        padding: 16px;
+        min-height: auto;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #1e293b, #334155);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        grid-template-columns: none !important;
+    }
+    
+    .split-hero-image {
+        width: 100%;
+        height: 160px;
+        border-radius: 12px;
+        object-fit: cover;
+    }
+    
+    .split-hero-content {
         gap: 8px;
+        padding: 0;
     }
     
-    .pagination-btn {
-        padding: 8px 12px;
+    .split-hero-eyebrow {
         font-size: 12px;
-        min-width: 80px;
+        font-weight: 600;
+        color: var(--accent-primary);
+        margin-bottom: 6px;
     }
     
-    .page-number {
-        width: 32px;
-        height: 32px;
+    .split-hero-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+        line-height: 1.3;
+    }
+    
+    .split-hero-subtext {
+        font-size: 14px;
+        color: var(--text-secondary);
+        line-height: 1.4;
+    }
+    
+    /* Project Updates Container - Horizontal Scroll */
+    .project-updates-container {
+        display: flex;
+        flex-direction: row;
+        gap: 16px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-behavior: smooth;
+        padding: 8px 0 12px 0;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        background: transparent;
+        border-radius: 16px;
+    }
+    
+    /* Project Update Banner - Tablet Perfect Fit */
+    .project-update-banner {
+        min-width: calc(50vw - 24px);
+        max-width: calc(50vw - 24px);
+        flex-shrink: 0;
+        scroll-snap-align: start;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 18px;
+        min-height: 360px;
+        border-radius: 16px;
+        box-sizing: border-box;
+        background: linear-gradient(135deg, #1e293b, #334155);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .update-image {
+        width: 100%;
+        height: 160px;
+        border-radius: 12px;
+        object-fit: cover;
+    }
+    
+    .update-content {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex: 1;
+    }
+    
+    .update-title {
+        font-size: 18px;
+        font-weight: 700;
+        margin: 0;
+        color: var(--text-primary);
+        line-height: 1.3;
+    }
+    
+    .update-description {
+        font-size: 14px;
+        line-height: 1.5;
+        margin: 0;
+        color: var(--text-secondary);
+        flex: 1;
+    }
+    
+    .update-date {
         font-size: 12px;
+        font-weight: 600;
+        color: var(--accent-primary);
+        margin: 0;
+        margin-top: auto;
+    }
+    
+    /* Custom Scrollbars - Tablet */
+    .featured-events-grid::-webkit-scrollbar,
+    .project-updates-container::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+    
+    .featured-events-grid::-webkit-scrollbar-track,
+    .project-updates-container::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+    }
+    
+    .featured-events-grid::-webkit-scrollbar-thumb,
+    .project-updates-container::-webkit-scrollbar-thumb {
+        background: linear-gradient(90deg, var(--accent-primary), #10b981);
+        border-radius: 3px;
+    }
+    
+    .featured-events-grid::-webkit-scrollbar-thumb:hover,
+    .project-updates-container::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(90deg, #10b981, #059669);
     }
 }
 
-/* Mobile: Simple and Clean Mobile Styles */
+/* Mobile Devices - Perfect Responsive Layout */
 @media (max-width: 768px) {
-    .upcoming-events-list,
-    .project-updates-list {
+    /* Events Page Container - Mobile Optimized */
+    .events-page {
+        padding: 55px 12px 20px 12px !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+    }
+    
+    /* Events Layout - Clean Stack */
+    .events-layout {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+        width: 100% !important;
+    }
+    
+    /* Featured Events Section - Mobile Container */
+    .featured-events-section {
+        padding: 10px !important;
+        background: rgba(255, 255, 255, 0.02) !important;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+        border-radius: 14px !important;
+        backdrop-filter: blur(20px) !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Featured Events Grid - Horizontal Scroll */
+    .featured-events-grid {
         display: flex !important;
         flex-direction: row !important;
-        gap: 16px !important;
+        gap: 14px !important;
         overflow-x: auto !important;
         overflow-y: hidden !important;
         scroll-behavior: smooth !important;
-        padding-bottom: 8px !important;
+        padding: 6px 0 10px 0 !important;
         scroll-snap-type: x mandatory !important;
         -webkit-overflow-scrolling: touch !important;
     }
     
-    .upcoming-event-item,
-    .project-update-item {
-        min-width: calc(100vw - 64px) !important;
-        max-width: calc(100vw - 64px) !important;
+    /* Featured Event Card - Mobile Perfect Fit */
+    .featured-event-card {
+        min-width: calc(100vw - 80px) !important;
+        max-width: calc(100vw - 80px) !important;
         flex-shrink: 0 !important;
-        padding: 20px !important;
-        min-height: 300px !important;
         scroll-snap-align: start !important;
+        padding: 16px !important;
+        min-height: 320px !important;
+        border-radius: 14px !important;
+        box-sizing: border-box !important;
+        background: linear-gradient(135deg, #1e293b, #334155) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 14px !important;
     }
     
-    .upcoming-event-item .event-thumbnail,
-    .project-update-item .update-thumbnail {
-        height: 160px !important;
-        margin-bottom: 12px !important;
+    /* Two Column Row - Stack Vertically */
+    .events-two-column-row {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
     }
     
-    .upcoming-event-item .event-date,
-    .project-update-item .update-date {
-        top: 20px !important;
-        right: 20px !important;
+    /* Events Columns - Mobile Containers */
+    .events-column {
+        padding: 10px !important;
+        background: rgba(255, 255, 255, 0.02) !important;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+        border-radius: 14px !important;
+        min-height: auto !important;
+        width: 100% !important;
+        backdrop-filter: blur(20px) !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Section Titles - Mobile Typography */
+    .section-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 14px;
+        text-align: left;
+    }
+    
+    /* Ensure Featured Events and Recent Project Updates headers have identical positioning */
+    .featured-events-section .section-title,
+    .events-column .section-title {
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        color: var(--text-primary) !important;
+        margin: 0 0 12px 0 !important;
+        padding: 0 8px 8px 8px !important;
+        text-align: left !important;
+        line-height: 1.2 !important;
+    }
+    
+    /* Split Hero Card - Upcoming Events Mobile */
+    .events-layout > .events-two-column-row:first-of-type .split-hero-card {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 6px !important;
+        padding: 14px !important;
+        min-height: 320px !important;
+        border-radius: 14px !important;
+        background: linear-gradient(135deg, #1e293b, #334155) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        grid-template-columns: none !important;
+    }
+    
+    .events-layout > .events-two-column-row:first-of-type .split-hero-image {
+        width: 100% !important;
+        height: 140px !important;
+        border-radius: 10px !important;
+        object-fit: cover !important;
+    }
+    
+    .events-layout > .events-two-column-row:first-of-type .split-hero-content {
+        gap: 6px !important;
+        padding: 0 !important;
+    }
+    
+    .split-hero-eyebrow {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--accent-primary);
+        margin-bottom: 5px;
+    }
+    
+    .split-hero-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 7px;
+        line-height: 1.3;
+    }
+    
+    .split-hero-subtext {
+        font-size: 13px;
+        color: var(--text-secondary);
+        line-height: 1.4;
+    }
+    
+    /* Featured Events Typography - Match Recent Project Updates */
+    .featured-event-card .event-title {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        margin: 0 !important;
+        color: var(--text-primary) !important;
+        line-height: 1.3 !important;
+    }
+    
+    .featured-event-card .event-description {
+        font-size: 13px !important;
+        line-height: 1.5 !important;
+        margin: 0 !important;
+        color: var(--text-secondary) !important;
+        flex: 1 !important;
+    }
+    
+    .featured-event-card .event-date {
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        color: var(--accent-primary) !important;
+        margin: 0 !important;
+        margin-top: auto !important;
+    }
+    
+    /* Project Updates Container - Horizontal Scroll */
+    .project-updates-container {
+        display: flex;
+        flex-direction: row;
+        gap: 14px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-behavior: smooth;
+        padding: 6px 0 10px 0;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        background: transparent;
+        border-radius: 14px;
+    }
+    
+    /* Project Update Banner - Mobile Perfect Fit */
+    .project-update-banner {
+        min-width: calc(100vw - 80px) !important;
+        max-width: calc(100vw - 80px) !important;
+        flex-shrink: 0 !important;
+        scroll-snap-align: start !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 14px !important;
+        padding: 16px !important;
+        min-height: 320px !important;
+        border-radius: 14px !important;
+        box-sizing: border-box !important;
+        background: linear-gradient(135deg, #1e293b, #334155) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+    
+    .update-image {
+        width: 100%;
+        height: 140px;
+        border-radius: 10px;
+        object-fit: cover;
+    }
+    
+    .update-content {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+        flex: 1;
+    }
+    
+    .update-title {
+        font-size: 16px;
+        font-weight: 700;
+        margin: 0;
+        color: var(--text-primary);
+        line-height: 1.3;
+    }
+    
+    .update-description {
+        font-size: 13px;
+        line-height: 1.5;
+        margin: 0;
+        color: var(--text-secondary);
+        flex: 1;
+    }
+    
+    .update-date {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--accent-primary);
+        margin: 0;
+        margin-top: auto;
+    }
+    
+    /* Custom Scrollbars - Mobile */
+    .featured-events-grid::-webkit-scrollbar,
+    .project-updates-container::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+    }
+    
+    .featured-events-grid::-webkit-scrollbar-track,
+    .project-updates-container::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 2px;
+    }
+    
+    .featured-events-grid::-webkit-scrollbar-thumb,
+    .project-updates-container::-webkit-scrollbar-thumb {
+        background: linear-gradient(90deg, var(--accent-primary), #10b981);
+        border-radius: 2px;
+    }
+    
+    .featured-events-grid::-webkit-scrollbar-thumb:hover,
+    .project-updates-container::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(90deg, #10b981, #059669);
     }
 }
 
+/* Small Mobile Devices - Extra Optimization */
+@media (max-width: 480px) {
+    /* Events Page Container - Small Mobile */
+    .events-page {
+        padding: 55px 8px 16px 8px;
+    }
+    
+    /* Container Padding - Smaller */
+    .featured-events-section,
+    .events-column {
+        padding: 8px;
+    }
+    
+    /* Banner Sizing - Perfect Fit */
+    .featured-event-card,
+    .project-update-banner {
+        min-width: calc(100vw - 64px);
+        max-width: calc(100vw - 64px);
+        padding: 14px;
+    }
+    
+    /* Banner Heights - Optimized */
+    .featured-event-card {
+        min-height: 280px;
+    }
+    
+    .project-update-banner {
+        min-height: 280px;
+    }
+    
+    /* Typography - Smaller Screens */
+    .section-title {
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+    
+    /* Ensure Featured Events and Recent Project Updates headers have identical positioning - Small Mobile */
+    .featured-events-section .section-title,
+    .events-column .section-title {
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        color: var(--text-primary) !important;
+        margin: 0 0 10px 0 !important;
+        padding: 0 6px 6px 6px !important;
+        text-align: left !important;
+        line-height: 1.2 !important;
+    }
+    
+    .split-hero-title {
+        font-size: 15px;
+    }
+    
+    .split-hero-subtext {
+        font-size: 12px;
+    }
+    
+    .update-title {
+        font-size: 15px;
+    }
+    
+    .update-description {
+        font-size: 12px;
+    }
+    
+    .update-date {
+        font-size: 10px;
+    }
+    
+    /* Image Heights - Compact */
+    .split-hero-image,
+    .update-image {
+        height: 120px;
+    }
+}
+
+/* Extra Small Mobile Devices - Maximum Optimization */
+@media (max-width: 360px) {
+    /* Events Page Container - Extra Small */
+    .events-page {
+        padding: 55px 6px 12px 6px;
+    }
+    
+    /* Container Padding - Minimal */
+    .featured-events-section,
+    .events-column {
+        padding: 6px;
+    }
+    
+    /* Banner Sizing - Maximum Fit */
+    .featured-event-card,
+    .project-update-banner {
+        min-width: calc(100vw - 48px);
+        max-width: calc(100vw - 48px);
+        padding: 12px;
+    }
+    
+    /* Banner Heights - Compact */
+    .featured-event-card {
+        min-height: 260px;
+    }
+    
+    .project-update-banner {
+        min-height: 260px;
+    }
+    
+    /* Typography - Extra Small */
+    .section-title {
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+    
+    /* Ensure Featured Events and Recent Project Updates headers have identical positioning - Extra Small Mobile */
+    .featured-events-section .section-title,
+    .events-column .section-title {
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        color: var(--text-primary) !important;
+        margin: 0 0 8px 0 !important;
+        padding: 0 4px 4px 4px !important;
+        text-align: left !important;
+        line-height: 1.2 !important;
+    }
+    
+    .split-hero-title {
+        font-size: 14px;
+    }
+    
+    .split-hero-subtext {
+        font-size: 11px;
+    }
+    
+    .update-title {
+        font-size: 14px;
+    }
+    
+    .update-description {
+        font-size: 11px;
+    }
+    
+    .update-date {
+        font-size: 9px;
+    }
+    
+    /* Image Heights - Minimal */
+    .split-hero-image,
+    .update-image {
+        height: 100px;
+    }
+}

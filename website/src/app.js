@@ -19,7 +19,7 @@
 
                 <div class="tab-item ${e.currentPage==="events"?"active":""}" data-page="events">
                     <a href="/events" class="tab-link">
-                        <img src="/stocktwits.png" alt="" class="tab-icon">
+                        <img src="/calendar.png" alt="" class="tab-icon">
                         <span class="tab-label">Events</span>
                     </a>
                 </div>
@@ -602,7 +602,7 @@
                             <div class="split-hero-content">
                                 <div class="split-hero-eyebrow">FIGHT ON SEPT 12 | STREAM BKFC APP</div>
                                 <h3 class="split-hero-title">KIMBO SLICE JR VS DEREK PEREZ</h3>
-                                <p class="split-hero-subtext">Feather weight bout</p>
+                                <p class="split-hero-subtext">Kimbo Slice Jr. makes his Bare Knuckle debut Sept 12 against 8 fight BKFC vet Derek Perez!</p>
                                 <a class="event-link-btn small" href="#" title="View Details">View details</a>
                             </div>
                         </div>
@@ -613,6 +613,17 @@
                 <div class="events-column">
                     <h2 class="section-title">Recent Project Updates</h2>
                     <div class="project-updates-container">
+                        <div class="project-update-banner in-progress">
+                            <div class="update-image">
+                                <img src="/Imgupdate5.png" alt="Rewards Update">
+                            </div>
+                            <div class="update-content">
+                                <h3 class="update-title">Rewards Update</h3>
+                                <p class="update-description">Due to Solana congestion, rewards didn't process automatically. All rewards were recorded and will be distributed within 72 hours. Our developer is currently performing an internal audit to ensure all accounts are fully reconciled before triggering payouts.</p>
+                                <div class="update-date">In progress</div>
+                            </div>
+                        </div>
+                        
                         <div class="project-update-banner completed">
                             <div class="update-image">
                                 <img src="/Imgupdate1.png" alt="Reward System Upgrade">
@@ -657,49 +668,10 @@
                             </div>
                         </div>
                         
-                        <div class="project-update-banner completed">
-                            <div class="update-image">
-                                <img src="/imggiveaway.jpg" alt="Community Giveaway Campaign">
-                            </div>
-                            <div class="update-content">
-                                <h3 class="update-title">Community Giveaway Campaign</h3>
-                                <p class="update-description">50,000 IMG giveaway with buy competition and raffle system launched</p>
-                                <div class="update-date">Completed Aug 28</div>
-                            </div>
-                        </div>
-                        
-                        <div class="project-update-banner completed">
-                            <div class="update-image">
-                                <img src="/kimbosponsor.jpg" alt="Athlete Sponsorship Program">
-                            </div>
-                            <div class="update-content">
-                                <h3 class="update-title">First Athlete Sponsorship</h3>
-                                <p class="update-description">Sponsored Kimbo Slice Jr as IMG Protocol's first official athlete partner</p>
-                                <div class="update-date">Completed Aug 30</div>
-                            </div>
-                        </div>
-                        
-                        <div class="project-update-banner in-progress">
-                            <div class="update-image">
-                                <img src="/bitruelisting.jpg" alt="Additional Exchange Listings">
-                            </div>
-                            <div class="update-content">
-                                <h3 class="update-title">Additional Exchange Listings</h3>
-                                <p class="update-description">Negotiations with tier-1 exchanges for broader IMG token accessibility</p>
-                                <div class="update-date">In Progress</div>
-                            </div>
-                        </div>
-                        
-                        <div class="project-update-banner pending">
-                            <div class="update-image">
-                                <img src="/newrewardsevent.jpg" alt="Staking Platform Launch">
-                            </div>
-                            <div class="update-content">
-                                <h3 class="update-title">Staking Platform Launch</h3>
-                                <p class="update-description">Advanced staking platform with flexible lock periods and bonus rewards</p>
-                                <div class="update-date">Planned Q2 2025</div>
-                            </div>
-                        </div>
+
+
+
+
                     </div>
                 </div>
             </div>
