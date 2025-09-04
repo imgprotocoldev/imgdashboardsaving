@@ -1857,6 +1857,531 @@ function setupEventIcons() {
     });
 }
 
+// Distribution Spreadsheet API Integration
+class DistributionAPI {
+    constructor() {
+        this.baseURL = '/api/distribution'; // Will be updated when backend is ready
+        this.currentData = [];
+        this.currentPage = 1;
+        this.itemsPerPage = 20;
+        this.currentMonth = '2025-01';
+        this.searchTerm = '';
+        this.isLoading = false;
+    }
+
+    // Fetch distribution data from backend (placeholder for now)
+    async fetchDistributionData(month = null, search = '', page = 1) {
+        if (this.isLoading) return;
+        
+        this.isLoading = true;
+        this.showLoadingState();
+        
+        try {
+            // TODO: Replace with actual API call when backend is ready
+            // const response = await fetch(`${this.baseURL}?month=${month}&search=${search}&page=${page}`);
+            // const data = await response.json();
+            
+            // For now, return placeholder data
+            const data = this.getPlaceholderData(month, search, page);
+            
+            this.currentData = data.items;
+            this.currentPage = page;
+            this.currentMonth = month || this.currentMonth;
+            this.searchTerm = search;
+            
+            this.renderDistributionTable();
+            this.updatePagination(data.totalPages, page);
+            
+        } catch (error) {
+            console.error('Error fetching distribution data:', error);
+            this.showErrorState('Failed to load distribution data');
+        } finally {
+            this.isLoading = false;
+            this.hideLoadingState();
+        }
+    }
+
+    // Get placeholder data (will be removed when backend is ready)
+    getPlaceholderData(month, search, page) {
+        const allData = this.generatePlaceholderData();
+        let filteredData = allData;
+        
+        // Filter by month if specified
+        if (month) {
+            const monthNum = parseInt(month.split('-')[1]);
+            filteredData = allData.filter(item => {
+                const itemMonth = parseInt(item.date.split('-')[1]);
+                return itemMonth === monthNum;
+            });
+        }
+        
+        // Filter by search term
+        if (search) {
+            filteredData = filteredData.filter(item => 
+                item.recipient.toLowerCase().includes(search.toLowerCase()) ||
+                item.id.toLowerCase().includes(search.toLowerCase())
+            );
+        }
+        
+        // Paginate
+        const startIndex = (page - 1) * this.itemsPerPage;
+        const endIndex = startIndex + this.itemsPerPage;
+        const paginatedData = filteredData.slice(startIndex, endIndex);
+        
+        return {
+            items: paginatedData,
+            totalPages: Math.ceil(filteredData.length / this.itemsPerPage),
+            totalItems: filteredData.length
+        };
+    }
+
+    // Generate placeholder data
+    generatePlaceholderData() {
+        const data = [];
+        const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+        const statuses = ['Completed', 'Pending', 'Failed'];
+        
+        for (let i = 1; i <= 200; i++) {
+            const month = months[Math.floor(Math.random() * months.length)];
+            const day = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
+            const hour = String(Math.floor(Math.random() * 24)).padStart(2, '0');
+            const minute = String(Math.floor(Math.random() * 60)).padStart(2, '0');
+            const second = String(Math.floor(Math.random() * 60)).padStart(2, '0');
+            
+            data.push({
+                id: `#${String(i).padStart(3, '0')}`,
+                date: `2025-${month}-${day}`,
+                time: `${hour}:${minute}:${second}`,
+                recipient: this.generateRandomAddress(),
+                amount: (Math.random() * 0.5 + 0.05).toFixed(3),
+                status: statuses[Math.floor(Math.random() * statuses.length)]
+            });
+        }
+        
+        return data.sort((a, b) => new Date(b.date + ' ' + b.time) - new Date(a.date + ' ' + a.time));
+    }
+
+    // Generate random Solana address
+    generateRandomAddress() {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        for (let i = 0; i < 4; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        result += '...';
+        for (let i = 0; i < 4; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
+    }
+
+    // Render distribution table
+    renderDistributionTable() {
+        const tbody = document.querySelector('.distribution-spreadsheet tbody');
+        if (!tbody) return;
+        
+        tbody.innerHTML = '';
+        
+        if (this.currentData.length === 0) {
+            tbody.innerHTML = `
+                <tr class="distribution-spreadsheet-row">
+                    <td colspan="6" style="text-align: center; padding: 20px; color: var(--text-secondary);">
+                        No distribution data found
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+        
+        this.currentData.forEach(item => {
+            const row = document.createElement('tr');
+            row.className = 'distribution-spreadsheet-row';
+            row.innerHTML = `
+                <td class="distribution-col-id">${item.id}</td>
+                <td class="distribution-col-date">${item.date}</td>
+                <td class="distribution-col-time">${item.time}</td>
+                <td class="distribution-col-recipient">${item.recipient}</td>
+                <td class="distribution-col-amount">${item.amount}</td>
+                <td class="distribution-col-status">
+                    <span class="status-badge ${item.status.toLowerCase()}">${item.status}</span>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    // Update pagination
+    updatePagination(totalPages, currentPage) {
+        const paginationInfo = document.querySelector('.distribution-pagination-info');
+        const prevBtn = document.querySelector('.distribution-pagination-btn[data-action="prev"]');
+        const nextBtn = document.querySelector('.distribution-pagination-btn[data-action="next"]');
+        
+        if (paginationInfo) {
+            paginationInfo.textContent = `${currentPage}/${totalPages} pages`;
+        }
+        
+        if (prevBtn) {
+            prevBtn.disabled = currentPage === 1;
+        }
+        
+        if (nextBtn) {
+            nextBtn.disabled = currentPage === totalPages;
+        }
+    }
+
+    // Show loading state
+    showLoadingState() {
+        const tbody = document.querySelector('.distribution-spreadsheet tbody');
+        if (tbody) {
+            tbody.innerHTML = `
+                <tr class="distribution-spreadsheet-row">
+                    <td colspan="6" style="text-align: center; padding: 20px;">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                            <div class="loading-spinner" style="width: 20px; height: 20px;"></div>
+                            Loading distribution data...
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }
+    }
+
+    // Hide loading state
+    hideLoadingState() {
+        // Loading state will be replaced by renderDistributionTable()
+    }
+
+    // Show error state
+    showErrorState(message) {
+        const tbody = document.querySelector('.distribution-spreadsheet tbody');
+        if (tbody) {
+            tbody.innerHTML = `
+                <tr class="distribution-spreadsheet-row">
+                    <td colspan="6" style="text-align: center; padding: 20px; color: var(--accent-danger);">
+                        ${message}
+                    </td>
+                </tr>
+            `;
+        }
+    }
+
+    // Refresh data
+    async refreshData() {
+        await this.fetchDistributionData(this.currentMonth, this.searchTerm, this.currentPage);
+    }
+
+    // Search functionality
+    async search(searchTerm) {
+        this.searchTerm = searchTerm;
+        await this.fetchDistributionData(this.currentMonth, searchTerm, 1);
+    }
+
+    // Filter by month
+    async filterByMonth(month) {
+        this.currentMonth = month;
+        await this.fetchDistributionData(month, this.searchTerm, 1);
+    }
+
+    // Go to page
+    async goToPage(page) {
+        await this.fetchDistributionData(this.currentMonth, this.searchTerm, page);
+    }
+}
+
+// Harvesting Spreadsheet API Integration
+class HarvestingAPI {
+    constructor() {
+        this.baseURL = '/api/harvesting'; // Will be updated when backend is ready
+        this.currentData = [];
+        this.currentPage = 1;
+        this.itemsPerPage = 20;
+        this.currentMonth = '2025-01';
+        this.isLoading = false;
+    }
+
+    // Fetch harvesting data from backend (placeholder for now)
+    async fetchHarvestingData(month = null, page = 1) {
+        if (this.isLoading) return;
+        
+        this.isLoading = true;
+        this.showLoadingState();
+        
+        try {
+            // TODO: Replace with actual API call when backend is ready
+            // const response = await fetch(`${this.baseURL}?month=${month}&page=${page}`);
+            // const data = await response.json();
+            
+            // For now, return placeholder data
+            const data = this.getPlaceholderData(month, page);
+            
+            this.currentData = data.items;
+            this.currentPage = page;
+            this.currentMonth = month || this.currentMonth;
+            
+            this.renderHarvestingTable();
+            this.updatePagination(data.totalPages, page);
+            
+        } catch (error) {
+            console.error('Error fetching harvesting data:', error);
+            this.showErrorState('Failed to load harvesting data');
+        } finally {
+            this.isLoading = false;
+            this.hideLoadingState();
+        }
+    }
+
+    // Get placeholder data (will be removed when backend is ready)
+    getPlaceholderData(month, page) {
+        const allData = this.generatePlaceholderData();
+        let filteredData = allData;
+        
+        // Filter by month if specified
+        if (month) {
+            const monthNum = parseInt(month.split('-')[1]);
+            filteredData = allData.filter(item => {
+                const itemMonth = parseInt(item.date.split('-')[1]);
+                return itemMonth === monthNum;
+            });
+        }
+        
+        // Paginate
+        const startIndex = (page - 1) * this.itemsPerPage;
+        const endIndex = startIndex + this.itemsPerPage;
+        const paginatedData = filteredData.slice(startIndex, endIndex);
+        
+        return {
+            items: paginatedData,
+            totalPages: Math.ceil(filteredData.length / this.itemsPerPage),
+            totalItems: filteredData.length
+        };
+    }
+
+    // Generate placeholder data
+    generatePlaceholderData() {
+        const data = [];
+        const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+        
+        for (let i = 1; i <= 150; i++) {
+            const month = months[Math.floor(Math.random() * months.length)];
+            const day = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
+            const hour = String(Math.floor(Math.random() * 24)).padStart(2, '0');
+            const minute = String(Math.floor(Math.random() * 60)).padStart(2, '0');
+            const second = String(Math.floor(Math.random() * 60)).padStart(2, '0');
+            
+            data.push({
+                id: `#${String(i).padStart(3, '0')}`,
+                date: `2025-${month}-${day}`,
+                time: `${hour}:${minute}:${second}`,
+                imgSold: (Math.random() * 1000 + 100).toFixed(0),
+                rewardPool: (Math.random() * 50 + 10).toFixed(3),
+                solDistributed: (Math.random() * 30 + 5).toFixed(3)
+            });
+        }
+        
+        return data.sort((a, b) => new Date(b.date + ' ' + b.time) - new Date(a.date + ' ' + a.time));
+    }
+
+    // Render harvesting table
+    renderHarvestingTable() {
+        const tbody = document.querySelector('.harvesting-spreadsheet tbody');
+        if (!tbody) return;
+        
+        tbody.innerHTML = '';
+        
+        if (this.currentData.length === 0) {
+            tbody.innerHTML = `
+                <tr class="spreadsheet-row">
+                    <td colspan="6" style="text-align: center; padding: 20px; color: var(--text-secondary);">
+                        No harvesting data found
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+        
+        this.currentData.forEach(item => {
+            const row = document.createElement('tr');
+            row.className = 'spreadsheet-row';
+            row.innerHTML = `
+                <td class="col-id">${item.id}</td>
+                <td class="col-date">${item.date}</td>
+                <td class="col-time">${item.time}</td>
+                <td class="col-img-sold">${item.imgSold}</td>
+                <td class="col-reward-pool">${item.rewardPool}</td>
+                <td class="col-sol-distributed">${item.solDistributed}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    // Update pagination
+    updatePagination(totalPages, currentPage) {
+        const paginationInfo = document.querySelector('.pagination-info');
+        const prevBtn = document.querySelector('.pagination-btn[data-action="prev"]');
+        const nextBtn = document.querySelector('.pagination-btn[data-action="next"]');
+        
+        if (paginationInfo) {
+            paginationInfo.textContent = `${currentPage}/${totalPages} pages`;
+        }
+        
+        if (prevBtn) {
+            prevBtn.disabled = currentPage === 1;
+        }
+        
+        if (nextBtn) {
+            nextBtn.disabled = currentPage === totalPages;
+        }
+    }
+
+    // Show loading state
+    showLoadingState() {
+        const tbody = document.querySelector('.harvesting-spreadsheet tbody');
+        if (tbody) {
+            tbody.innerHTML = `
+                <tr class="spreadsheet-row">
+                    <td colspan="6" style="text-align: center; padding: 20px;">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                            <div class="loading-spinner" style="width: 20px; height: 20px;"></div>
+                            Loading harvesting data...
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }
+    }
+
+    // Hide loading state
+    hideLoadingState() {
+        // Loading state will be replaced by renderHarvestingTable()
+    }
+
+    // Show error state
+    showErrorState(message) {
+        const tbody = document.querySelector('.harvesting-spreadsheet tbody');
+        if (tbody) {
+            tbody.innerHTML = `
+                <tr class="spreadsheet-row">
+                    <td colspan="6" style="text-align: center; padding: 20px; color: var(--accent-danger);">
+                        ${message}
+                    </td>
+                </tr>
+            `;
+        }
+    }
+
+    // Refresh data
+    async refreshData() {
+        await this.fetchHarvestingData(this.currentMonth, this.currentPage);
+    }
+
+    // Filter by month
+    async filterByMonth(month) {
+        this.currentMonth = month;
+        await this.fetchHarvestingData(month, 1);
+    }
+
+    // Go to page
+    async goToPage(page) {
+        await this.fetchHarvestingData(this.currentMonth, page);
+    }
+}
+
+// Initialize APIs
+const distributionAPI = new DistributionAPI();
+const harvestingAPI = new HarvestingAPI();
+
+// Setup Harvesting page functionality
+function setupHarvestingPage() {
+    // Initialize with default data
+    harvestingAPI.fetchHarvestingData();
+    
+    // Setup refresh button
+    const refreshBtn = document.querySelector('.control-btn.refresh-btn');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', () => {
+            harvestingAPI.refreshData();
+        });
+    }
+    
+    // Setup month dropdown
+    const monthDropdown = document.querySelector('.month-dropdown');
+    if (monthDropdown) {
+        monthDropdown.addEventListener('change', (e) => {
+            harvestingAPI.filterByMonth(e.target.value);
+        });
+    }
+    
+    // Setup pagination
+    const prevBtn = document.querySelector('.pagination-btn[data-action="prev"]');
+    const nextBtn = document.querySelector('.pagination-btn[data-action="next"]');
+    
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            if (harvestingAPI.currentPage > 1) {
+                harvestingAPI.goToPage(harvestingAPI.currentPage - 1);
+            }
+        });
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            harvestingAPI.goToPage(harvestingAPI.currentPage + 1);
+        });
+    }
+}
+
+// Setup Distribution page functionality
+function setupDistributionPage() {
+    // Initialize with default data
+    distributionAPI.fetchDistributionData();
+    
+    // Setup refresh button
+    const refreshBtn = document.querySelector('.distribution-refresh-btn');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', () => {
+            distributionAPI.refreshData();
+        });
+    }
+    
+    // Setup month dropdown
+    const monthDropdown = document.querySelector('.distribution-month-dropdown');
+    if (monthDropdown) {
+        monthDropdown.addEventListener('change', (e) => {
+            distributionAPI.filterByMonth(e.target.value);
+        });
+    }
+    
+    // Setup search functionality
+    const searchInputs = document.querySelectorAll('.distribution-mobile-search .search-input, .distribution-spreadsheet-controls .search-input');
+    searchInputs.forEach(input => {
+        let searchTimeout;
+        input.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                distributionAPI.search(e.target.value);
+            }, 300);
+        });
+    });
+    
+    // Setup pagination
+    const prevBtn = document.querySelector('.distribution-pagination-btn[data-action="prev"]');
+    const nextBtn = document.querySelector('.distribution-pagination-btn[data-action="next"]');
+    
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            if (distributionAPI.currentPage > 1) {
+                distributionAPI.goToPage(distributionAPI.currentPage - 1);
+            }
+        });
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            distributionAPI.goToPage(distributionAPI.currentPage + 1);
+        });
+    }
+}
+
 // Setup events scrollers for Upcoming Events and Recent Project Updates
 function setupEventsScrollers() {
     const scrollers = document.querySelectorAll('.events-scroller');
@@ -1943,4 +2468,4 @@ function setupEventsScrollers() {
     });
 }
 
-document.addEventListener("DOMContentLoaded",()=>{console.log("🚀 Protocol SPA Initializing..."),console.log("🧹 Clearing old wallet test data..."),localStorage.removeItem("walletConnected"),localStorage.removeItem("walletPremium"),localStorage.removeItem("walletPublicKey"),localStorage.removeItem("imgProtocolWalletState"),d.isConnected=!1,d.isPremium=!1,d.walletAddress="",d.currentPage="dashboard",console.log("🔄 App state reset:",d),f(),console.log("🔧 Sidebar initialized"),window.walletManager=new Re,p.start(),p("/terminal"),console.log("🎯 Initializing clean donut chart..."),Promise.resolve().then(()=>{N()}),setInterval(()=>{const i=document.getElementById("clean-donut-chart");i&&i.querySelectorAll(".daily-pie-segment").length===0&&(console.log("🔄 Chart segments missing, restoring..."),N())},500);const t=new MutationObserver(i=>{i.forEach(s=>{s.type==="childList"&&s.addedNodes.forEach(n=>{n.nodeType===Node.ELEMENT_NODE&&n.querySelector&&n.querySelector("#clean-donut-chart")&&(console.log("🚀 Dashboard chart detected, initializing immediately!"),Promise.resolve().then(()=>{N()}))})})}),a=document.getElementById("main-content");a&&t.observe(a,{childList:!0,subtree:!0}),We(),setupEventIcons(),setTimeout(()=>{const i=document.getElementById("sidebar-container");console.log("🔍 Sidebar container:",i),console.log("🔍 Sidebar content:",i?i.innerHTML.length:"null"),i&&!i.innerHTML.trim()&&(console.log("🔧 Sidebar empty, forcing update with current state..."),console.log("🔧 Current app state:",d),f())},50),console.log("✅ Protocol SPA Ready!")});
+document.addEventListener("DOMContentLoaded",()=>{console.log("🚀 Protocol SPA Initializing..."),console.log("🧹 Clearing old wallet test data..."),localStorage.removeItem("walletConnected"),localStorage.removeItem("walletPremium"),localStorage.removeItem("walletPublicKey"),localStorage.removeItem("imgProtocolWalletState"),d.isConnected=!1,d.isPremium=!1,d.walletAddress="",d.currentPage="dashboard",console.log("🔄 App state reset:",d),f(),console.log("🔧 Sidebar initialized"),window.walletManager=new Re,p.start(),p("/terminal"),console.log("🎯 Initializing clean donut chart..."),Promise.resolve().then(()=>{N()}),setInterval(()=>{const i=document.getElementById("clean-donut-chart");i&&i.querySelectorAll(".daily-pie-segment").length===0&&(console.log("🔄 Chart segments missing, restoring..."),N())},500);const t=new MutationObserver(i=>{i.forEach(s=>{s.type==="childList"&&s.addedNodes.forEach(n=>{n.nodeType===Node.ELEMENT_NODE&&n.querySelector&&n.querySelector("#clean-donut-chart")&&(console.log("🚀 Dashboard chart detected, initializing immediately!"),Promise.resolve().then(()=>{N()}))})})}),a=document.getElementById("main-content");a&&t.observe(a,{childList:!0,subtree:!0}),We(),setupEventIcons(),setupHarvestingPage(),setupDistributionPage(),setTimeout(()=>{const i=document.getElementById("sidebar-container");console.log("🔍 Sidebar container:",i),console.log("🔍 Sidebar content:",i?i.innerHTML.length:"null"),i&&!i.innerHTML.trim()&&(console.log("🔧 Sidebar empty, forcing update with current state..."),console.log("🔧 Current app state:",d),f())},50),console.log("✅ Protocol SPA Ready!")});
