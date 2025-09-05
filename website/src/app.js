@@ -1680,13 +1680,8 @@
         
         <!-- Completed Polls Spreadsheet -->
         <div class="completed-polls-section">
-            <div class="section-header">
-                <h2>Poll History</h2>
-            </div>
-            
             <div class="polls-spreadsheet">
                 <div class="spreadsheet-header">
-                    <div class="header-cell">Poll ID</div>
                     <div class="header-cell">Question</div>
                     <div class="header-cell">Result</div>
                     <div class="header-cell">Yes %</div>
@@ -1695,7 +1690,6 @@
                 </div>
                 
                 <div class="spreadsheet-row">
-                    <div class="data-cell poll-id">#POLL-001</div>
                     <div class="data-cell poll-question">Treasury Fund Allocation</div>
                     <div class="data-cell poll-result">
                         <span class="result-badge passed">Passed</span>
@@ -1706,7 +1700,6 @@
                 </div>
                 
                 <div class="spreadsheet-row">
-                    <div class="data-cell poll-id">#POLL-002</div>
                     <div class="data-cell poll-question">Smart Contract Upgrade</div>
                     <div class="data-cell poll-result">
                         <span class="result-badge rejected">Rejected</span>
@@ -1717,7 +1710,6 @@
                 </div>
                 
                 <div class="spreadsheet-row">
-                    <div class="data-cell poll-id">#POLL-003</div>
                     <div class="data-cell poll-question">Reward Distribution Schedule</div>
                     <div class="data-cell poll-result">
                         <span class="result-badge passed">Passed</span>
@@ -1728,7 +1720,6 @@
                 </div>
                 
                 <div class="spreadsheet-row">
-                    <div class="data-cell poll-id">#POLL-004</div>
                     <div class="data-cell poll-question">Community Grant Program</div>
                     <div class="data-cell poll-result">
                         <span class="result-badge passed">Passed</span>
