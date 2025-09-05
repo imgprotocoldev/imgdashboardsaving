@@ -1497,16 +1497,12 @@
                 <div class="poll-header">
                     <div class="poll-creator">IMG Protocol</div>
                     <div class="poll-meta">
-                        <span class="poll-label">Poll</span>
-                        <div class="poll-participants">
-                            <div class="participant-avatar"></div>
-                            <div class="participant-avatar"></div>
-                            <div class="participant-avatar"></div>
-                        </div>
+                        <span class="poll-status-badge">Active</span>
                     </div>
                 </div>
                 
                 <h2 class="poll-question">Should we reduce the protocol fee from 2.5% to 2.0%?</h2>
+                <p class="poll-explanation">This proposal aims to reduce transaction costs for users while maintaining protocol sustainability. The 0.5% reduction would make our platform more competitive in the DeFi space.</p>
                 
                 <div class="poll-options" id="poll-options-1">
                     <div class="poll-option" data-option="yes">
@@ -1533,9 +1529,8 @@
                 
                 <div class="poll-actions">
                     <button class="submit-vote-btn" id="submit-vote-btn-1" disabled>Submit Vote</button>
+                    <div class="poll-timestamp">End Date: Sept 10, 2025 – 7:00 PM EST</div>
                 </div>
-                
-                <div class="poll-timestamp">17:00</div>
             </div>
 
             <!-- Poll 2 -->
@@ -1543,16 +1538,12 @@
                 <div class="poll-header">
                     <div class="poll-creator">IMG Protocol</div>
                     <div class="poll-meta">
-                        <span class="poll-label">Poll</span>
-                        <div class="poll-participants">
-                            <div class="participant-avatar"></div>
-                            <div class="participant-avatar"></div>
-                            <div class="participant-avatar"></div>
-                        </div>
+                        <span class="poll-status-badge">Active</span>
                     </div>
                 </div>
                 
                 <h2 class="poll-question">Should we launch a new high-yield staking pool with 12% APY?</h2>
+                <p class="poll-explanation">This new staking pool would offer higher rewards for longer-term commitments. The 12% APY is sustainable through our diversified yield farming strategies and protocol revenue sharing.</p>
                 
                 <div class="poll-options" id="poll-options-2">
                     <div class="poll-option" data-option="yes">
@@ -1579,9 +1570,8 @@
                 
                 <div class="poll-actions">
                     <button class="submit-vote-btn" id="submit-vote-btn-2" disabled>Submit Vote</button>
+                    <div class="poll-timestamp">End Date: Sept 12, 2025 – 6:45 PM EST</div>
                 </div>
-                
-                <div class="poll-timestamp">16:45</div>
             </div>
 
             <!-- Poll 3 -->
@@ -1589,16 +1579,12 @@
                 <div class="poll-header">
                     <div class="poll-creator">IMG Protocol</div>
                     <div class="poll-meta">
-                        <span class="poll-label">Poll</span>
-                        <div class="poll-participants">
-                            <div class="participant-avatar"></div>
-                            <div class="participant-avatar"></div>
-                            <div class="participant-avatar"></div>
-                        </div>
+                        <span class="poll-status-badge">Active</span>
                     </div>
                 </div>
                 
                 <h2 class="poll-question">Should we integrate with cross-chain bridges (Wormhole, AllBridge)?</h2>
+                <p class="poll-explanation">Cross-chain integration would enable users to move assets between different blockchains seamlessly. This would significantly expand our user base and increase protocol utility across multiple ecosystems.</p>
                 
                 <div class="poll-options" id="poll-options-3">
                     <div class="poll-option" data-option="yes">
@@ -1625,9 +1611,8 @@
                 
                 <div class="poll-actions">
                     <button class="submit-vote-btn" id="submit-vote-btn-3" disabled>Submit Vote</button>
+                    <div class="poll-timestamp">End Date: Sept 15, 2025 – 4:30 PM EST</div>
                 </div>
-                
-                <div class="poll-timestamp">16:30</div>
             </div>
         </div>
         
