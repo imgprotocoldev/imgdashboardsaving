@@ -1490,82 +1490,252 @@
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
     
     <div class="vote-page">
-        <div class="page-header">
-            <h1>Vote</h1>
-            <p>Participate in Protocol governance and community decisions</p>
-        </div>
-        
-        <div class="vote-content">
-            <div class="active-proposals">
-                <h2>Active Proposals</h2>
-                <div class="proposals-list">
-                    <div class="proposal-card">
-                        <div class="proposal-header">
-                            <h3>Protocol Fee Adjustment</h3>
-                            <span class="proposal-status active">Active</span>
-                        </div>
-                        <p class="proposal-description">
-                            Proposal to adjust the protocol fee from 2.5% to 2.0% to increase user adoption and trading volume.
-                        </p>
-                        <div class="proposal-stats">
-                            <div class="stat-item">
-                                <span class="stat-label">Yes Votes</span>
-                                <span class="stat-value">67.4%</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-label">No Votes</span>
-                                <span class="stat-value">32.6%</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-label">Time Left</span>
-                                <span class="stat-value">3 days</span>
-                            </div>
-                        </div>
-                        <div class="proposal-actions">
-                            <button class="vote-btn yes">Vote Yes</button>
-                            <button class="vote-btn no">Vote No</button>
-                        </div>
-                    </div>
-                    
-                    <div class="proposal-card">
-                        <div class="proposal-header">
-                            <h3>New Staking Pool Launch</h3>
-                            <span class="proposal-status active">Active</span>
-                        </div>
-                        <p class="proposal-description">
-                            Proposal to launch a new high-yield staking pool with 12% APY for token holders.
-                        </p>
-                        <div class="proposal-stats">
-                            <div class="stat-item">
-                                <span class="stat-label">Yes Votes</span>
-                                <span class="stat-value">84.2%</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-label">No Votes</span>
-                                <span class="stat-value">15.8%</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-label">Time Left</span>
-                                <span class="stat-value">5 days</span>
-                            </div>
-                        </div>
-                        <div class="proposal-actions">
-                            <button class="vote-btn yes">Vote Yes</button>
-                            <button class="vote-btn no">Vote No</button>
+        <!-- Active Polls Grid -->
+        <div class="active-polls-grid">
+            <!-- Poll 1 -->
+            <div class="poll-card">
+                <div class="poll-header">
+                    <div class="poll-creator">IMG Protocol</div>
+                    <div class="poll-meta">
+                        <span class="poll-label">Poll</span>
+                        <div class="poll-participants">
+                            <div class="participant-avatar"></div>
+                            <div class="participant-avatar"></div>
+                            <div class="participant-avatar"></div>
                         </div>
                     </div>
                 </div>
+                
+                <h2 class="poll-question">Should we reduce the protocol fee from 2.5% to 2.0%?</h2>
+                
+                <div class="poll-options" id="poll-options-1">
+                    <div class="poll-option" data-option="yes">
+                        <div class="option-selector">
+                            <div class="option-circle"></div>
+                        </div>
+                        <span class="option-text">Yes - Reduce to 2.0%</span>
+                    </div>
+                    
+                    <div class="poll-option" data-option="no">
+                        <div class="option-selector">
+                            <div class="option-circle"></div>
+                        </div>
+                        <span class="option-text">No - Keep at 2.5%</span>
+                    </div>
+                    
+                    <div class="poll-option" data-option="abstain">
+                        <div class="option-selector">
+                            <div class="option-circle"></div>
+                        </div>
+                        <span class="option-text">Abstain</span>
+                    </div>
+                </div>
+                
+                <div class="poll-actions">
+                    <button class="submit-vote-btn" id="submit-vote-btn-1" disabled>Submit Vote</button>
+                </div>
+                
+                <div class="poll-timestamp">17:00</div>
+            </div>
+
+            <!-- Poll 2 -->
+            <div class="poll-card">
+                <div class="poll-header">
+                    <div class="poll-creator">IMG Protocol</div>
+                    <div class="poll-meta">
+                        <span class="poll-label">Poll</span>
+                        <div class="poll-participants">
+                            <div class="participant-avatar"></div>
+                            <div class="participant-avatar"></div>
+                            <div class="participant-avatar"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h2 class="poll-question">Should we launch a new high-yield staking pool with 12% APY?</h2>
+                
+                <div class="poll-options" id="poll-options-2">
+                    <div class="poll-option" data-option="yes">
+                        <div class="option-selector">
+                            <div class="option-circle"></div>
+                        </div>
+                        <span class="option-text">Yes - Launch Pool</span>
+                    </div>
+                    
+                    <div class="poll-option" data-option="no">
+                        <div class="option-selector">
+                            <div class="option-circle"></div>
+                        </div>
+                        <span class="option-text">No - Keep Current</span>
+                    </div>
+                    
+                    <div class="poll-option" data-option="abstain">
+                        <div class="option-selector">
+                            <div class="option-circle"></div>
+                        </div>
+                        <span class="option-text">Abstain</span>
+                    </div>
+                </div>
+                
+                <div class="poll-actions">
+                    <button class="submit-vote-btn" id="submit-vote-btn-2" disabled>Submit Vote</button>
+                </div>
+                
+                <div class="poll-timestamp">16:45</div>
+            </div>
+
+            <!-- Poll 3 -->
+            <div class="poll-card">
+                <div class="poll-header">
+                    <div class="poll-creator">IMG Protocol</div>
+                    <div class="poll-meta">
+                        <span class="poll-label">Poll</span>
+                        <div class="poll-participants">
+                            <div class="participant-avatar"></div>
+                            <div class="participant-avatar"></div>
+                            <div class="participant-avatar"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h2 class="poll-question">Should we integrate with cross-chain bridges (Wormhole, AllBridge)?</h2>
+                
+                <div class="poll-options" id="poll-options-3">
+                    <div class="poll-option" data-option="yes">
+                        <div class="option-selector">
+                            <div class="option-circle"></div>
+                        </div>
+                        <span class="option-text">Yes - Integrate</span>
+                    </div>
+                    
+                    <div class="poll-option" data-option="no">
+                        <div class="option-selector">
+                            <div class="option-circle"></div>
+                        </div>
+                        <span class="option-text">No - Stay Single Chain</span>
+                    </div>
+                    
+                    <div class="poll-option" data-option="abstain">
+                        <div class="option-selector">
+                            <div class="option-circle"></div>
+                        </div>
+                        <span class="option-text">Abstain</span>
+                    </div>
+                </div>
+                
+                <div class="poll-actions">
+                    <button class="submit-vote-btn" id="submit-vote-btn-3" disabled>Submit Vote</button>
+                </div>
+                
+                <div class="poll-timestamp">16:30</div>
+            </div>
+        </div>
+        
+        <!-- Poll Results (Hidden until vote is submitted) -->
+        <div class="poll-results" id="poll-results" style="display: none;">
+            <div class="results-card">
+                <div class="results-header">
+                    <h3>Poll Results</h3>
+                    <span class="results-status">Completed</span>
+                </div>
+                
+                <div class="results-content">
+                    <div class="result-option">
+                        <div class="result-label">Yes - Reduce to 2.0%</div>
+                        <div class="result-bar">
+                            <div class="result-fill yes" style="width: 67.4%"></div>
+                        </div>
+                        <div class="result-percentage">67.4% (1,247 votes)</div>
+                    </div>
+                    
+                    <div class="result-option">
+                        <div class="result-label">No - Keep at 2.5%</div>
+                        <div class="result-bar">
+                            <div class="result-fill no" style="width: 22.8%"></div>
+                        </div>
+                        <div class="result-percentage">22.8% (423 votes)</div>
+                    </div>
+                    
+                    <div class="result-option">
+                        <div class="result-label">Abstain</div>
+                        <div class="result-bar">
+                            <div class="result-fill abstain" style="width: 9.8%"></div>
+                        </div>
+                        <div class="result-percentage">9.8% (182 votes)</div>
+                    </div>
+                </div>
+                
+                <div class="results-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">Total Votes:</span>
+                        <span class="summary-value">1,852</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Participation:</span>
+                        <span class="summary-value">18.7%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Completed Polls Spreadsheet -->
+        <div class="completed-polls-section">
+            <div class="section-header">
+                <h2>Poll History</h2>
             </div>
             
-            <div class="vote-info">
-                <h2>Voting Information</h2>
-                <div class="info-card">
-                    <h3>Your Voting Power</h3>
-                    <p>Your voting power is determined by your token balance. Each token equals 1 vote.</p>
-                    <div class="voting-power">
-                        <span class="power-amount">47,500 Votes</span>
-                        <span class="power-label">Available</span>
+            <div class="polls-spreadsheet">
+                <div class="spreadsheet-header">
+                    <div class="header-cell">Poll ID</div>
+                    <div class="header-cell">Question</div>
+                    <div class="header-cell">Result</div>
+                    <div class="header-cell">Yes %</div>
+                    <div class="header-cell">Total Votes</div>
+                    <div class="header-cell">Date</div>
+                </div>
+                
+                <div class="spreadsheet-row">
+                    <div class="data-cell poll-id">#POLL-001</div>
+                    <div class="data-cell poll-question">Treasury Fund Allocation</div>
+                    <div class="data-cell poll-result">
+                        <span class="result-badge passed">Passed</span>
                     </div>
+                    <div class="data-cell poll-yes">78.3%</div>
+                    <div class="data-cell poll-votes">3.2M</div>
+                    <div class="data-cell poll-date">Dec 15, 2024</div>
+                </div>
+                
+                <div class="spreadsheet-row">
+                    <div class="data-cell poll-id">#POLL-002</div>
+                    <div class="data-cell poll-question">Smart Contract Upgrade</div>
+                    <div class="data-cell poll-result">
+                        <span class="result-badge rejected">Rejected</span>
+                    </div>
+                    <div class="data-cell poll-yes">45.2%</div>
+                    <div class="data-cell poll-votes">2.8M</div>
+                    <div class="data-cell poll-date">Dec 8, 2024</div>
+                </div>
+                
+                <div class="spreadsheet-row">
+                    <div class="data-cell poll-id">#POLL-003</div>
+                    <div class="data-cell poll-question">Reward Distribution Schedule</div>
+                    <div class="data-cell poll-result">
+                        <span class="result-badge passed">Passed</span>
+                    </div>
+                    <div class="data-cell poll-yes">91.7%</div>
+                    <div class="data-cell poll-votes">4.1M</div>
+                    <div class="data-cell poll-date">Nov 28, 2024</div>
+                </div>
+                
+                <div class="spreadsheet-row">
+                    <div class="data-cell poll-id">#POLL-004</div>
+                    <div class="data-cell poll-question">Community Grant Program</div>
+                    <div class="data-cell poll-result">
+                        <span class="result-badge passed">Passed</span>
+                    </div>
+                    <div class="data-cell poll-yes">82.1%</div>
+                    <div class="data-cell poll-votes">2.9M</div>
+                    <div class="data-cell poll-date">Nov 15, 2024</div>
                 </div>
             </div>
         </div>
@@ -2474,4 +2644,56 @@ function setupEventsScrollers() {
     });
 }
 
-document.addEventListener("DOMContentLoaded",()=>{console.log("🚀 Protocol SPA Initializing..."),console.log("🧹 Clearing old wallet test data..."),localStorage.removeItem("walletConnected"),localStorage.removeItem("walletPremium"),localStorage.removeItem("walletPublicKey"),localStorage.removeItem("imgProtocolWalletState"),d.isConnected=!1,d.isPremium=!1,d.walletAddress="",d.currentPage="dashboard",console.log("🔄 App state reset:",d),f(),console.log("🔧 Sidebar initialized"),window.walletManager=new Re,p.start(),p("/terminal"),console.log("🎯 Initializing clean donut chart..."),Promise.resolve().then(()=>{N()}),setInterval(()=>{const i=document.getElementById("clean-donut-chart");i&&i.querySelectorAll(".daily-pie-segment").length===0&&(console.log("🔄 Chart segments missing, restoring..."),N())},500);const t=new MutationObserver(i=>{i.forEach(s=>{s.type==="childList"&&s.addedNodes.forEach(n=>{n.nodeType===Node.ELEMENT_NODE&&n.querySelector&&n.querySelector("#clean-donut-chart")&&(console.log("🚀 Dashboard chart detected, initializing immediately!"),Promise.resolve().then(()=>{N()}))})})}),a=document.getElementById("main-content");a&&t.observe(a,{childList:!0,subtree:!0}),We(),setupEventIcons(),setupHarvestingPage(),setupDistributionPage(),setTimeout(()=>{const i=document.getElementById("sidebar-container");console.log("🔍 Sidebar container:",i),console.log("🔍 Sidebar content:",i?i.innerHTML.length:"null"),i&&!i.innerHTML.trim()&&(console.log("🔧 Sidebar empty, forcing update with current state..."),console.log("🔧 Current app state:",d),f())},50),console.log("✅ Protocol SPA Ready!")});
+// Voting functionality
+function setupVotingSystem() {
+    // Setup voting for each poll
+    for (let i = 1; i <= 3; i++) {
+        const pollOptions = document.getElementById(`poll-options-${i}`);
+        const submitBtn = document.getElementById(`submit-vote-btn-${i}`);
+        
+        if (!pollOptions || !submitBtn) continue;
+        
+        let selectedOption = null;
+        
+        // Handle option selection
+        pollOptions.addEventListener('click', (e) => {
+            const option = e.target.closest('.poll-option');
+            if (!option) return;
+            
+            // Remove previous selection in this poll
+            pollOptions.querySelectorAll('.poll-option').forEach(opt => {
+                opt.classList.remove('selected');
+                const circle = opt.querySelector('.option-circle');
+                circle.classList.remove('selected');
+            });
+            
+            // Add selection to clicked option
+            option.classList.add('selected');
+            const circle = option.querySelector('.option-circle');
+            circle.classList.add('selected');
+            
+            selectedOption = option.dataset.option;
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Vote';
+        });
+        
+        // Handle vote submission
+        submitBtn.addEventListener('click', () => {
+            if (!selectedOption) return;
+            
+            // Disable the poll
+            pollOptions.style.pointerEvents = 'none';
+            pollOptions.style.opacity = '0.6';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Vote Submitted';
+            
+            // Show success message
+            setTimeout(() => {
+                submitBtn.textContent = '✓ Vote Recorded';
+                submitBtn.style.background = '#10b981';
+            }, 500);
+        });
+    }
+}
+
+document.addEventListener("DOMContentLoaded",()=>{console.log("🚀 Protocol SPA Initializing..."),console.log("🧹 Clearing old wallet test data..."),localStorage.removeItem("walletConnected"),localStorage.removeItem("walletPremium"),localStorage.removeItem("walletPublicKey"),localStorage.removeItem("imgProtocolWalletState"),d.isConnected=!1,d.isPremium=!1,d.walletAddress="",d.currentPage="dashboard",console.log("🔄 App state reset:",d),f(),console.log("🔧 Sidebar initialized"),window.walletManager=new Re,p.start(),p("/terminal"),console.log("🎯 Initializing clean donut chart..."),Promise.resolve().then(()=>{N()}),setInterval(()=>{const i=document.getElementById("clean-donut-chart");i&&i.querySelectorAll(".daily-pie-segment").length===0&&(console.log("🔄 Chart segments missing, restoring..."),N())},500);const t=new MutationObserver(i=>{i.forEach(s=>{s.type==="childList"&&s.addedNodes.forEach(n=>{n.nodeType===Node.ELEMENT_NODE&&n.querySelector&&n.querySelector("#clean-donut-chart")&&(console.log("🚀 Dashboard chart detected, initializing immediately!"),Promise.resolve().then(()=>{N()}))})})}),a=document.getElementById("main-content");a&&t.observe(a,{childList:!0,subtree:!0}),We(),setupEventIcons(),setupHarvestingPage(),setupDistributionPage(),setupVotingSystem(),setTimeout(()=>{const i=document.getElementById("sidebar-container");console.log("🔍 Sidebar container:",i),console.log("🔍 Sidebar content:",i?i.innerHTML.length:"null"),i&&!i.innerHTML.trim()&&(console.log("🔧 Sidebar empty, forcing update with current state..."),console.log("🔧 Current app state:",d),f())},50),console.log("✅ Protocol SPA Ready!")});
