@@ -1718,6 +1718,17 @@
                     <div class="data-cell poll-votes">2.9M</div>
                     <div class="data-cell poll-date">Nov 15, 2024</div>
                 </div>
+                
+                <div class="spreadsheet-row">
+                    <div class="data-cell poll-question">Protocol Fee Structure Update</div>
+                    <div class="data-cell poll-result">
+                        <span class="result-badge rejected">Rejected</span>
+                    </div>
+                    <div class="data-cell poll-yes">38.5%</div>
+                    <div class="data-cell poll-no">61.5%</div>
+                    <div class="data-cell poll-votes">3.7M</div>
+                    <div class="data-cell poll-date">Nov 2, 2024</div>
+                </div>
             </div>
         </div>
     </div>
