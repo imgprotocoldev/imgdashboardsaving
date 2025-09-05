@@ -1667,9 +1667,10 @@
         <div class="completed-polls-section">
             <div class="polls-spreadsheet">
                 <div class="spreadsheet-header">
-                    <div class="header-cell">Question</div>
-                    <div class="header-cell">Result</div>
+                    <div class="header-cell">Voting History</div>
+                    <div class="header-cell">Status</div>
                     <div class="header-cell">Yes %</div>
+                    <div class="header-cell">No %</div>
                     <div class="header-cell">Total Votes</div>
                     <div class="header-cell">Date</div>
                 </div>
@@ -1680,6 +1681,7 @@
                         <span class="result-badge passed">Passed</span>
                     </div>
                     <div class="data-cell poll-yes">78.3%</div>
+                    <div class="data-cell poll-no">21.7%</div>
                     <div class="data-cell poll-votes">3.2M</div>
                     <div class="data-cell poll-date">Dec 15, 2024</div>
                 </div>
@@ -1690,6 +1692,7 @@
                         <span class="result-badge rejected">Rejected</span>
                     </div>
                     <div class="data-cell poll-yes">45.2%</div>
+                    <div class="data-cell poll-no">54.8%</div>
                     <div class="data-cell poll-votes">2.8M</div>
                     <div class="data-cell poll-date">Dec 8, 2024</div>
                 </div>
@@ -1700,6 +1703,7 @@
                         <span class="result-badge passed">Passed</span>
                     </div>
                     <div class="data-cell poll-yes">91.7%</div>
+                    <div class="data-cell poll-no">8.3%</div>
                     <div class="data-cell poll-votes">4.1M</div>
                     <div class="data-cell poll-date">Nov 28, 2024</div>
                 </div>
@@ -1710,6 +1714,7 @@
                         <span class="result-badge passed">Passed</span>
                     </div>
                     <div class="data-cell poll-yes">82.1%</div>
+                    <div class="data-cell poll-no">17.9%</div>
                     <div class="data-cell poll-votes">2.9M</div>
                     <div class="data-cell poll-date">Nov 15, 2024</div>
                 </div>
