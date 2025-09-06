@@ -2822,66 +2822,242 @@ async function fetchPollResults(pollId) {
 }
 
 
-// SIMPLE VOTING SYSTEM
+// CLEAN PROFESSIONAL VOTING SYSTEM
 
-// Simple voting system setup
-let votingSystemInitialized = false;
+// Voting system state
+const votingState = {
+    apiBaseUrl: 'https://img-protocol-backend.onrender.com',
+    initialized: false
+};
 
-async function setupVotingSystem() {
-    console.log('🗳️ Setting up simple voting system...');
+// Initialize voting system
+async function initializeVotingSystem() {
+    console.log('🗳️ Initializing professional voting system...');
     
-    // Check if we're on the voting page
+    // Check if we're on voting page
     const votePage = document.getElementById('vote');
-    if (!votePage) {
-        console.log('🗳️ Not on voting page, skipping setup');
+    if (!votePage || votePage.style.display === 'none') {
+        console.log('🗳️ Not on voting page');
         return;
     }
     
-    // Prevent multiple initializations
-    if (votingSystemInitialized) {
-        console.log('🗳️ Voting system already initialized, skipping');
+    if (votingState.initialized) {
+        console.log('🗳️ Already initialized');
         return;
     }
     
-    console.log('🗳️ On voting page, proceeding with setup');
-    
-    // Reset UI to show voting options
-    resetVotingUI();
-    
-    // Fetch poll data and update UI
-    await updatePollCardsWithRealData();
-    
-    // Setup poll interactions
-    setupPollInteractions();
-    
-    // Mark as initialized
-    votingSystemInitialized = true;
-    console.log('✅ Voting system initialized successfully');
+    try {
+        // Load active polls
+        await loadActivePolls();
+        
+        // Setup event listeners
+        setupVotingEventListeners();
+        
+        votingState.initialized = true;
+        console.log('✅ Voting system initialized successfully');
+    } catch (error) {
+        console.error('❌ Failed to initialize voting system:', error);
+    }
 }
 
-// Simple function to update poll cards with real data
-async function updatePollCardsWithRealData() {
+// Load active polls from backend
+async function loadActivePolls() {
     try {
-        const polls = await fetchActivePolls();
-        console.log('🗳️ Fetched polls:', polls);
+        const response = await fetch(`${votingState.apiBaseUrl}/api/polls/active`);
+        const data = await response.json();
         
-        polls.forEach(poll => {
-            const pollCard = document.querySelector(`#poll-options-${poll.id}`)?.closest('.poll-card');
-            if (pollCard) {
-                // Update poll title and description
-                const titleElement = pollCard.querySelector('.poll-title');
-                const descElement = pollCard.querySelector('.poll-description');
-                
-                if (titleElement) titleElement.textContent = poll.title;
-                if (descElement) descElement.textContent = poll.description;
-                
-                console.log(`✅ Updated poll card ${poll.id} with real data`);
-            }
-        });
+        if (data.success && data.polls) {
+            updatePollCards(data.polls);
+            console.log('✅ Loaded active polls:', data.polls.length);
+        }
     } catch (error) {
-        console.error('❌ Error updating poll cards:', error);
+        console.error('❌ Failed to load polls:', error);
     }
 }
+
+// Update poll cards with real data
+function updatePollCards(polls) {
+    polls.forEach(poll => {
+        const pollCard = document.querySelector(`[data-poll-id="${poll.id}"]`);
+        if (pollCard) {
+            const titleElement = pollCard.querySelector('.poll-title');
+            const descElement = pollCard.querySelector('.poll-description');
+            
+            if (titleElement) titleElement.textContent = poll.title;
+            if (descElement) descElement.textContent = poll.description;
+        }
+    });
+}
+
+// Setup voting event listeners
+function setupVotingEventListeners() {
+    // Use event delegation for poll options
+    document.addEventListener('click', async (e) => {
+        // Handle poll option selection
+        if (e.target.classList.contains('poll-option')) {
+            const pollId = e.target.closest('[data-poll-id]')?.dataset.pollId;
+            const option = e.target.dataset.option;
+            
+            if (pollId && option) {
+                selectPollOption(pollId, option);
+            }
+        }
+        
+        // Handle vote submission
+        if (e.target.classList.contains('submit-vote-btn')) {
+            const pollId = e.target.dataset.pollId;
+            const selectedOption = e.target.dataset.selectedOption;
+            
+            if (pollId && selectedOption) {
+                await submitVote(pollId, selectedOption);
+            }
+        }
+        
+        // Handle view results
+        if (e.target.classList.contains('view-results-btn')) {
+            const pollId = e.target.dataset.pollId;
+            if (pollId) {
+                await showPollResults(pollId);
+            }
+        }
+    });
+}
+
+// Select poll option
+function selectPollOption(pollId, option) {
+    console.log(`🗳️ Selecting option ${option} for poll ${pollId}`);
+    
+    const pollCard = document.querySelector(`[data-poll-id="${pollId}"]`);
+    if (!pollCard) return;
+    
+    // Remove previous selections
+    pollCard.querySelectorAll('.poll-option').forEach(opt => {
+        opt.classList.remove('selected');
+    });
+    
+    // Select current option
+    const selectedOption = pollCard.querySelector(`[data-option="${option}"]`);
+    if (selectedOption) {
+        selectedOption.classList.add('selected');
+    }
+    
+    // Enable submit button
+    const submitBtn = pollCard.querySelector('.submit-vote-btn');
+    if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.dataset.selectedOption = option;
+        submitBtn.style.background = '#3b82f6';
+    }
+}
+
+// Submit vote
+async function submitVote(pollId, option) {
+    console.log(`🗳️ Submitting vote: poll ${pollId}, option ${option}`);
+    
+    const pollCard = document.querySelector(`[data-poll-id="${pollId}"]`);
+    if (!pollCard) return;
+    
+    const submitBtn = pollCard.querySelector('.submit-vote-btn');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+    }
+    
+    try {
+        const walletAddress = window.walletManager?.walletAddress;
+        if (!walletAddress) {
+            throw new Error('Wallet not connected');
+        }
+        
+        const response = await fetch(`${votingState.apiBaseUrl}/api/polls/${pollId}/vote`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                walletAddress: walletAddress,
+                voteOption: option
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            console.log('✅ Vote submitted successfully');
+            await showPollResults(pollId);
+        } else {
+            throw new Error(data.message || 'Vote failed');
+        }
+    } catch (error) {
+        console.error('❌ Vote submission failed:', error);
+        alert(`Vote failed: ${error.message}`);
+        
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Vote';
+        }
+    }
+}
+
+// Show poll results
+async function showPollResults(pollId) {
+    try {
+        const response = await fetch(`${votingState.apiBaseUrl}/api/polls/${pollId}/results`);
+        const data = await response.json();
+        
+        if (data.success) {
+            displayPollResults(pollId, data.results);
+        }
+    } catch (error) {
+        console.error('❌ Failed to load results:', error);
+    }
+}
+
+// Display poll results
+function displayPollResults(pollId, results) {
+    const pollCard = document.querySelector(`[data-poll-id="${pollId}"]`);
+    if (!pollCard) return;
+    
+    // Hide voting options
+    const pollOptions = pollCard.querySelector('.poll-options');
+    const submitBtn = pollCard.querySelector('.submit-vote-btn');
+    
+    if (pollOptions) pollOptions.style.display = 'none';
+    if (submitBtn) submitBtn.style.display = 'none';
+    
+    // Create results display
+    const resultsHtml = `
+        <div class="poll-results">
+            <h4>Poll Results</h4>
+            <div class="results-stats">
+                <div class="result-item">
+                    <span>Yes: ${results.yes} (${Math.round((results.yes / results.total) * 100)}%)</span>
+                </div>
+                <div class="result-item">
+                    <span>No: ${results.no} (${Math.round((results.no / results.total) * 100)}%)</span>
+                </div>
+                <div class="result-item">
+                    <span>Abstain: ${results.abstain} (${Math.round((results.abstain / results.total) * 100)}%)</span>
+                </div>
+            </div>
+            <div class="total-votes">Total Votes: ${results.total}</div>
+            <button class="view-voters-btn" data-poll-id="${pollId}">View Voters</button>
+        </div>
+    `;
+    
+    // Insert results
+    const pollContent = pollCard.querySelector('.poll-content');
+    if (pollContent) {
+        pollContent.insertAdjacentHTML('beforeend', resultsHtml);
+    }
+}
+
+// Global functions for voting system
+window.initializeVotingSystem = initializeVotingSystem;
+window.reinitializeVotingSystem = () => {
+    votingState.initialized = false;
+    initializeVotingSystem();
+};
 
 // Simple poll interactions setup
 function setupPollInteractions() {
@@ -3135,25 +3311,29 @@ async function showVotersPopup(pollId, results) {
     }
 }
 
-// Simple reinitialize function
-async function reinitializeVotingSystem() {
-    console.log('🗳️ Reinitializing simple voting system...');
-    votingSystemInitialized = false; // Reset flag
-    await setupVotingSystem();
-}
+// Auto-initialize voting system when vote page is detected
+const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                const votePage = node.querySelector ? node.querySelector('#vote') : null;
+                if (votePage || (node.id === 'vote')) {
+                    console.log('🗳️ Vote page detected, initializing...');
+                    initializeVotingSystem();
+                }
+            }
+        });
+    });
+});
 
-// Make functions globally available
-window.setupVotingSystem = setupVotingSystem;
-window.reinitializeVotingSystem = reinitializeVotingSystem;
-window.resetVotingUI = resetVotingUI;
+// Start observing
+observer.observe(document.body, { childList: true, subtree: true });
 
-// Manual trigger for testing
-window.testVotingSystem = async function() {
-    console.log('🧪 MANUAL TEST: Initializing voting system...');
-    await setupVotingSystem();
-    console.log('🧪 MANUAL TEST: Voting system initialized!');
-};
+// Also initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        initializeVotingSystem();
+    }, 1000);
+});
 
- // Simple voting system initialization - only when vote page is detected
-
-document.addEventListener("DOMContentLoaded",()=>{console.log("🚀 Protocol SPA Initializing..."),console.log("🧹 Clearing old wallet test data..."),localStorage.removeItem("walletConnected"),localStorage.removeItem("walletPremium"),localStorage.removeItem("walletPublicKey"),localStorage.removeItem("imgProtocolWalletState"),d.isConnected=!1,d.isPremium=!1,d.walletAddress="",d.currentPage="dashboard",console.log("🔄 App state reset:",d),f(),console.log("🔧 Sidebar initialized"),window.walletManager=new Re,p.start(),p("/terminal"),console.log("🎯 Initializing clean donut chart..."),Promise.resolve().then(()=>{N()}),setInterval(()=>{const i=document.getElementById("clean-donut-chart");i&&i.querySelectorAll(".daily-pie-segment").length===0&&(console.log("🔄 Chart segments missing, restoring..."),N())},500);const t=new MutationObserver(i=>{i.forEach(s=>{s.type==="childList"&&s.addedNodes.forEach(n=>{n.nodeType===Node.ELEMENT_NODE&&n.querySelector&&n.querySelector("#clean-donut-chart")&&(console.log("🚀 Dashboard chart detected, initializing immediately!"),Promise.resolve().then(()=>{N()}))})})}),a=document.getElementById("main-content");a&&t.observe(a,{childList:!0,subtree:!0});const u=new MutationObserver(i=>{i.forEach(s=>{s.type==="childList"&&s.addedNodes.forEach(n=>{n.nodeType===Node.ELEMENT_NODE&&n.querySelector&&n.querySelector(".vote-page")&&(console.log("🗳️ Vote page detected, initializing voting system..."),setupVotingSystem())})})});a&&u.observe(a,{childList:!0,subtree:!0});We(),setupEventIcons(),setupHarvestingPage(),setupDistributionPage(),setTimeout(()=>{const i=document.getElementById("sidebar-container");console.log("🔍 Sidebar container:",i),console.log("🔍 Sidebar content:",i?i.innerHTML.length:"null"),i&&!i.innerHTML.trim()&&(console.log("🔧 Sidebar empty, forcing update with current state..."),console.log("🔧 Current app state:",d),f())},50),console.log("✅ Protocol SPA Ready!")});
+document.addEventListener("DOMContentLoaded",()=>{console.log("🚀 Protocol SPA Initializing..."),console.log("🧹 Clearing old wallet test data..."),localStorage.removeItem("walletConnected"),localStorage.removeItem("walletPremium"),localStorage.removeItem("walletPublicKey"),localStorage.removeItem("imgProtocolWalletState"),d.isConnected=!1,d.isPremium=!1,d.walletAddress="",d.currentPage="dashboard",console.log("🔄 App state reset:",d),f(),console.log("🔧 Sidebar initialized"),window.walletManager=new Re,p.start(),p("/terminal"),console.log("🎯 Initializing clean donut chart..."),Promise.resolve().then(()=>{N()}),setInterval(()=>{const i=document.getElementById("clean-donut-chart");i&&i.querySelectorAll(".daily-pie-segment").length===0&&(console.log("🔄 Chart segments missing, restoring..."),N())},500);const t=new MutationObserver(i=>{i.forEach(s=>{s.type==="childList"&&s.addedNodes.forEach(n=>{n.nodeType===Node.ELEMENT_NODE&&n.querySelector&&n.querySelector("#clean-donut-chart")&&(console.log("🚀 Dashboard chart detected, initializing immediately!"),Promise.resolve().then(()=>{N()}))})})}),a=document.getElementById("main-content");a&&t.observe(a,{childList:!0,subtree:!0});We(),setupEventIcons(),setupHarvestingPage(),setupDistributionPage(),setTimeout(()=>{const i=document.getElementById("sidebar-container");console.log("🔍 Sidebar container:",i),console.log("🔍 Sidebar content:",i?i.innerHTML.length:"null"),i&&!i.innerHTML.trim()&&(console.log("🔧 Sidebar empty, forcing update with current state..."),console.log("🔧 Current app state:",d),f())},50),console.log("✅ Protocol SPA Ready!")});
