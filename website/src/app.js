@@ -2678,7 +2678,8 @@ const votingState = {
     walletAddress: null,
     votedPolls: new Set(),
     pollResults: {},
-    apiBaseUrl: 'https://img-protocol-backend.onrender.com'
+    apiBaseUrl: 'https://img-protocol-backend.onrender.com',
+    submittingVote: false
 };
 
 // Clear voting history on page load to start fresh
@@ -3097,8 +3098,12 @@ function setupPollInteractions() {
             
         });
         
+        // Remove any existing click listeners to prevent duplicates
+        const newSubmitBtn = submitBtn.cloneNode(true);
+        submitBtn.parentNode.replaceChild(newSubmitBtn, submitBtn);
+        
         // Handle vote submission
-        submitBtn.addEventListener('click', (e) => {
+        newSubmitBtn.addEventListener('click', (e) => {
             e.preventDefault();
             
             if (!pollData.selectedOption) {
@@ -3115,6 +3120,20 @@ function setupPollInteractions() {
 
 // Submit vote function
 async function submitVote(pollId, option) {
+    // Prevent multiple submissions
+    if (votingState.submittingVote) {
+        console.log('⚠️ Vote submission already in progress, ignoring duplicate');
+        return;
+    }
+    
+    // Check if already voted
+    if (votingState.votedPolls.has(pollId)) {
+        console.log('⚠️ Already voted on this poll, ignoring submission');
+        return;
+    }
+    
+    // Set submission flag
+    votingState.submittingVote = true;
     
     // Show loading state
     const pollCard = document.querySelector(`#poll-options-${pollId}`).closest('.poll-card');
@@ -3155,6 +3174,9 @@ async function submitVote(pollId, option) {
         submitBtn.textContent = 'Submit Vote';
         submitBtn.style.background = '#3b82f6';
     }
+    
+    // Clear submission flag
+    votingState.submittingVote = false;
 }
 
 // Update poll results (simulate adding a vote)
@@ -3276,8 +3298,22 @@ function showVotersPopup(pollId, results, userVote) {
     const generateMockVoters = (count, voteType) => {
         const voters = [];
         for (let i = 1; i <= count; i++) {
+            // Use the current wallet address only for the first voter, generate unique addresses for others
+            let address;
+            if (i === 1) {
+                address = getCurrentWalletAddress() || `0x${Math.random().toString(16).substr(2, 40)}`;
+            } else {
+                // Generate unique Solana-style addresses for additional voters
+                const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+                let result = '';
+                for (let j = 0; j < 44; j++) {
+                    result += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                address = result;
+            }
+            
             voters.push({
-                address: getCurrentWalletAddress() || `0x${Math.random().toString(16).substr(2, 40)}`,
+                address: address,
                 vote: voteType,
                 timestamp: new Date(Date.now() - Math.random() * 86400000).toLocaleString()
             });
