@@ -2702,8 +2702,13 @@ function getCurrentWalletAddress() {
 
 // Function to reset voting UI to show voting options instead of results
 function resetVotingUI() {
+    console.log('🗳️ Resetting voting UI...');
+    console.log('🗳️ VotedPolls before clear:', Array.from(votingState.votedPolls));
+    
     // Clear voted polls set
     votingState.votedPolls.clear();
+    
+    console.log('🗳️ VotedPolls after clear:', Array.from(votingState.votedPolls));
     
     // Reset all poll cards to show voting options
     for (let i = 1; i <= 3; i++) {
@@ -2711,6 +2716,8 @@ function resetVotingUI() {
         const submitBtn = document.getElementById(`submit-vote-btn-${i}`);
         
         if (pollOptions && submitBtn) {
+            console.log(`🗳️ Resetting poll ${i} UI`);
+            
             // Reset poll options
             pollOptions.style.pointerEvents = 'auto';
             pollOptions.style.opacity = '1';
@@ -3053,23 +3060,31 @@ function updateVotedPollsUI() {
 
 // Setup poll interactions
 function setupPollInteractions() {
+    console.log('🗳️ Setting up poll interactions...');
+    console.log('🗳️ Current votedPolls:', Array.from(votingState.votedPolls));
+    
     for (let i = 1; i <= 3; i++) {
         const pollOptions = document.getElementById(`poll-options-${i}`);
         const submitBtn = document.getElementById(`submit-vote-btn-${i}`);
         
         if (!pollOptions || !submitBtn) {
+            console.log(`🗳️ Poll ${i}: Missing elements`);
             continue;
         }
         
         // Skip if already voted
         if (votingState.votedPolls.has(i)) {
+            console.log(`🗳️ Poll ${i}: Already voted, skipping`);
             continue;
         }
         
         // Skip if event listeners are already attached
         if (pollOptions.hasAttribute('data-listeners-attached')) {
+            console.log(`🗳️ Poll ${i}: Event listeners already attached, skipping`);
             continue;
         }
+        
+        console.log(`🗳️ Poll ${i}: Setting up interactions`);
         
         // Store selected option in a way that's accessible to both event listeners
         const pollData = { selectedOption: null };
@@ -3078,6 +3093,8 @@ function setupPollInteractions() {
         pollOptions.addEventListener('click', (e) => {
             const option = e.target.closest('.poll-option');
             if (!option) return;
+            
+            console.log(`🗳️ Poll ${i}: Option clicked - ${option.dataset.option}`);
             
             // Remove previous selection in this poll
             pollOptions.querySelectorAll('.poll-option').forEach(opt => {
@@ -3096,6 +3113,7 @@ function setupPollInteractions() {
             submitBtn.textContent = 'Submit Vote';
             submitBtn.style.background = '#3b82f6';
             
+            console.log(`🗳️ Poll ${i}: Submit button enabled for option ${option.dataset.option}`);
         });
         
         // Remove any existing click listeners to prevent duplicates
