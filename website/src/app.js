@@ -2684,6 +2684,12 @@ const votingState = {
 // Clear voting history on page load to start fresh
 localStorage.removeItem('votingHistory');
 localStorage.removeItem('userVotes');
+// Clear all voting history for any wallet address
+Object.keys(localStorage).forEach(key => {
+    if (key.startsWith('voting_history_') || key.startsWith('user_votes_')) {
+        localStorage.removeItem(key);
+    }
+});
 
 // Function to get the current wallet address
 function getCurrentWalletAddress() {
@@ -2691,6 +2697,43 @@ function getCurrentWalletAddress() {
         return window.walletManager.walletAddress;
     }
     return null;
+}
+
+// Function to reset voting UI to show voting options instead of results
+function resetVotingUI() {
+    // Clear voted polls set
+    votingState.votedPolls.clear();
+    
+    // Reset all poll cards to show voting options
+    for (let i = 1; i <= 3; i++) {
+        const pollOptions = document.getElementById(`poll-options-${i}`);
+        const submitBtn = document.getElementById(`submit-vote-btn-${i}`);
+        
+        if (pollOptions && submitBtn) {
+            // Reset poll options
+            pollOptions.style.pointerEvents = 'auto';
+            pollOptions.style.opacity = '1';
+            
+            // Reset submit button
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submit Vote';
+            submitBtn.style.background = '#6b7280';
+            submitBtn.dataset.selectedOption = '';
+            
+            // Clear any selected options
+            pollOptions.querySelectorAll('.poll-option').forEach(option => {
+                option.classList.remove('selected');
+                const circle = option.querySelector('.option-circle');
+                if (circle) circle.classList.remove('selected');
+            });
+            
+            // Remove any existing results display
+            const existingResults = pollOptions.closest('.poll-card').querySelector('.poll-results');
+            if (existingResults) {
+                existingResults.remove();
+            }
+        }
+    }
 }
 
 // API Functions
@@ -2835,10 +2878,14 @@ async function setupVotingSystem() {
         votingState.walletAddress = '0x' + Math.random().toString(16).substr(2, 40);
     }
     
+    // Reset voting UI to show voting options instead of results
+    resetVotingUI();
+    
     // Fetch real poll data from API and update poll cards
     await updatePollCardsWithRealData();
     
-    loadVotingHistory();
+    // Don't load voting history since we want fresh voting
+    // loadVotingHistory();
     
     // Wait for voting page elements to be available
     const checkForVotingElements = () => {
@@ -3357,11 +3404,14 @@ async function reinitializeVotingSystem() {
         votingState.walletAddress = window.walletManager.walletAddress;
     }
     
-    // Reload voting history
-    loadVotingHistory();
+    // Reset voting UI to show voting options instead of results
+    resetVotingUI();
     
-    // Update UI for already voted polls
-    updateVotedPollsUI();
+    // Don't load voting history since we want fresh voting
+    // loadVotingHistory();
+    
+    // Don't update UI for already voted polls since we want fresh voting
+    // updateVotedPollsUI();
     
     // Also fetch fresh data from API and update poll cards
     await updatePollCardsWithRealData();
@@ -3386,5 +3436,6 @@ async function initializeVotingOnPageLoad() {    const votePage = document.query
 window.reinitializeVotingSystem = reinitializeVotingSystem;
 window.checkAndRestoreVotingState = checkAndRestoreVotingState;
 window.setupVotingSystem = setupVotingSystem;
+window.resetVotingUI = resetVotingUI;
 
 document.addEventListener("DOMContentLoaded",()=>{console.log("🚀 Protocol SPA Initializing..."),console.log("🧹 Clearing old wallet test data..."),localStorage.removeItem("walletConnected"),localStorage.removeItem("walletPremium"),localStorage.removeItem("walletPublicKey"),localStorage.removeItem("imgProtocolWalletState"),d.isConnected=!1,d.isPremium=!1,d.walletAddress="",d.currentPage="dashboard",console.log("🔄 App state reset:",d),f(),console.log("🔧 Sidebar initialized"),window.walletManager=new Re,p.start(),p("/terminal"),console.log("🎯 Initializing clean donut chart..."),Promise.resolve().then(()=>{N()}),setInterval(()=>{const i=document.getElementById("clean-donut-chart");i&&i.querySelectorAll(".daily-pie-segment").length===0&&(console.log("🔄 Chart segments missing, restoring..."),N())},500);const t=new MutationObserver(i=>{i.forEach(s=>{s.type==="childList"&&s.addedNodes.forEach(n=>{n.nodeType===Node.ELEMENT_NODE&&n.querySelector&&n.querySelector("#clean-donut-chart")&&(console.log("🚀 Dashboard chart detected, initializing immediately!"),Promise.resolve().then(()=>{N()}))})})}),a=document.getElementById("main-content");a&&t.observe(a,{childList:!0,subtree:!0});const u=new MutationObserver(i=>{i.forEach(s=>{s.type==="childList"&&s.addedNodes.forEach(n=>{n.nodeType===Node.ELEMENT_NODE&&n.querySelector&&n.querySelector(".vote-page")&&(reinitializeVotingSystem())})})});a&&u.observe(a,{childList:!0,subtree:!0});setInterval(()=>{checkAndRestoreVotingState()},500),We(),setupEventIcons(),setupHarvestingPage(),setupDistributionPage(),setupVotingSystem(),initializeVotingOnPageLoad(),setTimeout(()=>{const i=document.getElementById("sidebar-container");console.log("🔍 Sidebar container:",i),console.log("🔍 Sidebar content:",i?i.innerHTML.length:"null"),i&&!i.innerHTML.trim()&&(console.log("🔧 Sidebar empty, forcing update with current state..."),console.log("🔧 Current app state:",d),f())},50),console.log("✅ Protocol SPA Ready!")});
