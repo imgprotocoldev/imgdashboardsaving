@@ -2873,19 +2873,29 @@ function setupPollInteractions() {
         const submitBtn = document.getElementById(`submit-vote-btn-${i}`);
         
         if (!pollOptions || !submitBtn) {
-            console.log(`🗳️ Poll ${i}: Missing elements`);
+            console.log(`🗳️ Poll ${i}: Missing elements - pollOptions:`, !!pollOptions, 'submitBtn:', !!submitBtn);
             continue;
         }
         
         console.log(`🗳️ Poll ${i}: Setting up interactions`);
+        console.log(`🗳️ Poll ${i}: Poll options element:`, pollOptions);
+        console.log(`🗳️ Poll ${i}: Submit button element:`, submitBtn);
+        console.log(`🗳️ Poll ${i}: Poll options children:`, pollOptions.children);
         
         // Store selected option
         const pollData = { selectedOption: null };
         
         // Handle option selection
         pollOptions.addEventListener('click', (e) => {
+            console.log(`🗳️ Poll ${i}: Click detected on:`, e.target);
+            console.log(`🗳️ Poll ${i}: Looking for .poll-option in:`, e.target);
+            
             const option = e.target.closest('.poll-option');
-            if (!option) return;
+            if (!option) {
+                console.log(`🗳️ Poll ${i}: No .poll-option found, checking parent elements`);
+                console.log(`🗳️ Poll ${i}: Parent elements:`, e.target.parentElement, e.target.parentElement?.parentElement);
+                return;
+            }
             
             console.log(`🗳️ Poll ${i}: Option clicked - ${option.dataset.option}`);
             
