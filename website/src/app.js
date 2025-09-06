@@ -2913,7 +2913,7 @@ function loadVotingHistory() {
     if (savedVotes) {
         const votes = JSON.parse(savedVotes);
         votingState.votedPolls = new Set(votes);
-        updateVotedPollsUI();
+        console.log('🗳️ Loaded voting history:', Array.from(votingState.votedPolls));
     }
 }
 
@@ -2938,19 +2938,26 @@ function loadUserVotes() {
 
 // Update UI for already voted polls (optimized)
 function updateVotedPollsUI() {
+    console.log('🗳️ updateVotedPollsUI called, votedPolls:', Array.from(votingState.votedPolls));
     if (votingState.votedPolls.size === 0) return;
     
     const userVotes = loadUserVotes();
+    console.log('🗳️ User votes:', userVotes);
     
     // Process all voted polls in one batch
     votingState.votedPolls.forEach(pollId => {
+        console.log(`🗳️ Processing voted poll ${pollId}`);
         const pollOptions = document.getElementById(`poll-options-${pollId}`);
-        if (!pollOptions) return;
+        if (!pollOptions) {
+            console.log(`🗳️ Poll options not found for poll ${pollId}`);
+            return;
+        }
         
         const pollCard = pollOptions.closest('.poll-card');
         const submitBtn = pollCard?.querySelector('.submit-vote-btn');
         
         if (pollOptions && submitBtn) {
+            console.log(`🗳️ Updating UI for voted poll ${pollId}`);
             // Hide poll options and show results
             pollOptions.style.display = 'none';
             submitBtn.disabled = true;
@@ -3338,31 +3345,38 @@ function updateVotingSpreadsheet() {
 
 // Function to reinitialize voting system when vote page is shown
 async function reinitializeVotingSystem() {
+    console.log('🗳️ Reinitializing voting system...');
+    
     // Update wallet address if wallet is connected
     if (window.walletManager && window.walletManager.walletAddress) {
         votingState.walletAddress = window.walletManager.walletAddress;
+        console.log('🗳️ Wallet address:', votingState.walletAddress);
     }
     
-    // Reset voting UI to show voting options instead of results
-    resetVotingUI();
-    
-    // Don't load voting history since we want fresh voting
-    // loadVotingHistory();
-    
-    // Don't update UI for already voted polls since we want fresh voting
-    // updateVotedPollsUI();
-    
-    // Also fetch fresh data from API and update poll cards
+    // Fetch fresh data from API and update poll cards first
     await updatePollCardsWithRealData();
+    
+    // Load voting history to restore state
+    loadVotingHistory();
+    
+    // Update UI for already voted polls
+    updateVotedPollsUI();
+    
+    // Setup poll interactions for non-voted polls
+    setupPollInteractions();
+    
+    console.log('🗳️ Voting system reinitialized');
 }
 
 // Optimized function to check and restore voting state
 function checkAndRestoreVotingState() {
     const votePage = document.querySelector('.vote-page');
     if (votePage) {
-        // Don't reinitialize if voting system is already set up
-        // This prevents clearing selected options
-        return;
+        // Check if voting system needs to be reinitialized
+        const pollOptions = document.getElementById('poll-options-1');
+        if (pollOptions && !pollOptions.hasAttribute('data-listeners-attached')) {
+            reinitializeVotingSystem();
+        }
     }
 }
 
