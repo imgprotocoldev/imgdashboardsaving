@@ -9,7 +9,17 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: [
+        'https://img-protocol-backend.onrender.com',
+        'https://imgdashboardwallet.onrender.com',
+        'http://localhost:3000',
+        'http://localhost:5173',
+        'http://127.0.0.1:3000',
+        'http://127.0.0.1:5173'
+    ],
+    credentials: true
+}));
 app.use(express.json());
 
 // Solana connection (using public RPC endpoint)

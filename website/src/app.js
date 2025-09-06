@@ -2677,19 +2677,91 @@ function setupEventsScrollers() {
 const votingState = {
     walletAddress: null,
     votedPolls: new Set(),
-    pollResults: {
-        1: { yes: 1247, no: 423, abstain: 182, total: 1852 },
-        2: { yes: 892, no: 634, abstain: 156, total: 1682 },
-        3: { yes: 1103, no: 445, abstain: 234, total: 1782 }
-    }
+    pollResults: {},
+    apiBaseUrl: 'https://img-protocol-backend.onrender.com'
 };
 
+// API Functions
+async function fetchActivePolls() {
+    try {
+        const response = await fetch(`${votingState.apiBaseUrl}/api/polls/active`);
+        const data = await response.json();
+        
+        if (data.success && data.polls) {
+            // Convert polls to the format expected by the frontend
+            data.polls.forEach(poll => {
+                votingState.pollResults[poll.id] = poll.options;
+            });
+            console.log('✅ Fetched active polls:', data.polls);
+            return data.polls;
+        } else {
+            console.error('❌ Failed to fetch polls:', data.error);
+            return [];
+        }
+    } catch (error) {
+        console.error('❌ Error fetching polls:', error);
+        return [];
+    }
+}
+
+async function submitVoteToAPI(pollId, voteOption) {
+    try {
+        const response = await fetch(`${votingState.apiBaseUrl}/api/polls/${pollId}/vote`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                walletAddress: votingState.walletAddress,
+                voteOption: voteOption
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            console.log('✅ Vote submitted successfully:', data);
+            return true;
+        } else {
+            console.error('❌ Vote submission failed:', data.error);
+            alert(`Vote failed: ${data.error}`);
+            return false;
+        }
+    } catch (error) {
+        console.error('❌ Error submitting vote:', error);
+        alert('Failed to submit vote. Please try again.');
+        return false;
+    }
+}
+
+async function fetchPollResults(pollId) {
+    try {
+        const response = await fetch(`${votingState.apiBaseUrl}/api/polls/${pollId}/results`);
+        const data = await response.json();
+        
+        if (data.success) {
+            votingState.pollResults[pollId] = data.results;
+            return data.results;
+        } else {
+            console.error('❌ Failed to fetch poll results:', data.error);
+            return null;
+        }
+    } catch (error) {
+        console.error('❌ Error fetching poll results:', error);
+        return null;
+    }
+}
+
 // Voting functionality
-function setupVotingSystem() {
+async function setupVotingSystem() {
     console.log('Setting up voting system...');
     // Generate a unique wallet address for this session
     votingState.walletAddress = '0x' + Math.random().toString(16).substr(2, 40);
     console.log('Wallet address:', votingState.walletAddress);
+    
+    // Fetch real poll data from API
+    await fetchActivePolls();
+    
     loadVotingHistory();
     
     // Wait for voting page elements to be available
@@ -2915,41 +2987,48 @@ function setupPollInteractions() {
 }
 
 // Submit vote function
-function submitVote(pollId, option) {
-    // Add to voted polls
-    votingState.votedPolls.add(pollId);
-    saveVotingHistory();
+async function submitVote(pollId, option) {
+    console.log(`Submitting vote for poll ${pollId}: ${option}`);
     
-    // Save user's vote choice
-    saveUserVote(pollId, option);
-    
-    // Update poll results (simulate vote)
-    updatePollResults(pollId, option);
-    
-    // Update UI
+    // Show loading state
     const pollCard = document.querySelector(`#poll-options-${pollId}`).closest('.poll-card');
     const pollOptions = pollCard.querySelector('.poll-options');
     const submitBtn = pollCard.querySelector('.submit-vote-btn');
     
-    // Disable the poll
-    pollOptions.style.pointerEvents = 'none';
-    pollOptions.style.opacity = '0.6';
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Vote Submitted';
+    submitBtn.textContent = 'Submitting...';
+    submitBtn.style.background = '#6b7280';
     
-    // Show success message
-    setTimeout(() => {
+    // Submit vote to API
+    const success = await submitVoteToAPI(pollId, option);
+    
+    if (success) {
+        // Add to voted polls
+        votingState.votedPolls.add(pollId);
+        saveVotingHistory();
+        
+        // Save user's vote choice
+        saveUserVote(pollId, option);
+        
+        // Update poll results from API
+        await fetchPollResults(pollId);
+        
+        // Disable the poll
+        pollOptions.style.pointerEvents = 'none';
+        pollOptions.style.opacity = '0.6';
         submitBtn.textContent = '✓ Vote Recorded';
         submitBtn.style.background = '#10b981';
         
         // Show results for this poll
         showPollResults(pollId);
-    }, 500);
-    
-    // Note: Voting history only shows completed polls, not active polls
-    // Active polls that users vote on should not appear in the history until finished
-    
-    console.log(`Vote submitted for poll ${pollId}: ${option}`);
+        
+        console.log(`✅ Vote submitted successfully for poll ${pollId}: ${option}`);
+    } else {
+        // Reset button on failure
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Vote';
+        submitBtn.style.background = '#3b82f6';
+    }
 }
 
 // Update poll results (simulate adding a vote)
