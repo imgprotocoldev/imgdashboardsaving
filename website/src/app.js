@@ -2828,6 +2828,15 @@ async function fetchPollResults(pollId) {
 async function setupVotingSystem() {
     console.log('🗳️ Setting up simple voting system...');
     
+    // Check if we're on the voting page
+    const votePage = document.getElementById('vote');
+    if (!votePage) {
+        console.log('🗳️ Not on voting page, skipping setup');
+        return;
+    }
+    
+    console.log('🗳️ On voting page, proceeding with setup');
+    
     // Reset UI to show voting options
     resetVotingUI();
     
@@ -2881,14 +2890,23 @@ function setupPollInteractions() {
         console.log(`🗳️ Poll ${i}: Poll options element:`, pollOptions);
         console.log(`🗳️ Poll ${i}: Submit button element:`, submitBtn);
         console.log(`🗳️ Poll ${i}: Poll options children:`, pollOptions.children);
+        console.log(`🗳️ Poll ${i}: Poll options HTML:`, pollOptions.innerHTML);
+        console.log(`🗳️ Poll ${i}: Poll options style:`, pollOptions.style.cssText);
+        console.log(`🗳️ Poll ${i}: Poll options computed style:`, window.getComputedStyle(pollOptions).pointerEvents);
         
         // Store selected option
         const pollData = { selectedOption: null };
+        
+        // Test: Add a simple click handler to see if ANY clicks work
+        pollOptions.addEventListener('click', (e) => {
+            console.log(`🗳️ Poll ${i}: BASIC CLICK TEST - Click detected!`, e.target);
+        });
         
         // Handle option selection
         pollOptions.addEventListener('click', (e) => {
             console.log(`🗳️ Poll ${i}: Click detected on:`, e.target);
             console.log(`🗳️ Poll ${i}: Looking for .poll-option in:`, e.target);
+            console.log(`🗳️ Poll ${i}: Event listener working!`);
             
             const option = e.target.closest('.poll-option');
             if (!option) {
