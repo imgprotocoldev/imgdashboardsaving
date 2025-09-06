@@ -2826,9 +2826,15 @@ async function updatePollCardsWithRealData() {
 // Voting functionality
 async function setupVotingSystem() {
     console.log('Setting up voting system...');
-    // Generate a unique wallet address for this session
-    votingState.walletAddress = '0x' + Math.random().toString(16).substr(2, 40);
-    console.log('Wallet address:', votingState.walletAddress);
+    // Use the real connected wallet address instead of generating a fake one
+    if (window.walletManager && window.walletManager.walletAddress) {
+        votingState.walletAddress = window.walletManager.walletAddress;
+        console.log('Using real wallet address:', votingState.walletAddress);
+    } else {
+        // Fallback: generate a unique wallet address for this session
+        votingState.walletAddress = '0x' + Math.random().toString(16).substr(2, 40);
+        console.log('Using generated wallet address:', votingState.walletAddress);
+    }
     
     // Fetch real poll data from API and update poll cards
     await updatePollCardsWithRealData();
@@ -3370,6 +3376,13 @@ function updateVotingSpreadsheet() {
 // Function to reinitialize voting system when vote page is shown
 async function reinitializeVotingSystem() {
     console.log('🗳️ Reinitializing voting system...');
+    
+    // Update wallet address if wallet is connected
+    if (window.walletManager && window.walletManager.walletAddress) {
+        votingState.walletAddress = window.walletManager.walletAddress;
+        console.log('🗳️ Updated wallet address:', votingState.walletAddress);
+    }
+    
     // Reload voting history
     loadVotingHistory();
     
