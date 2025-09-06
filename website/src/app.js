@@ -2770,6 +2770,41 @@ function checkWalletChange() {
     return false;
 }
 
+// Function to sync voting state with backend
+async function syncVotingStateWithBackend() {
+    try {
+        console.log('🗳️ Syncing voting state with backend...');
+        
+        // Get current poll results from backend
+        const response = await fetch(`${votingState.apiBaseUrl}/api/polls/active`);
+        if (!response.ok) {
+            console.log('🗳️ Failed to fetch polls from backend');
+            return;
+        }
+        
+        const data = await response.json();
+        if (data.success && data.polls) {
+            // Check if any polls have votes
+            const hasVotes = data.polls.some(poll => poll.options.total > 0);
+            
+            if (!hasVotes) {
+                console.log('🗳️ Backend has no votes, clearing frontend state');
+                clearVotingStateForNewWallet();
+                
+                // Clear localStorage for this wallet
+                if (votingState.walletAddress) {
+                    localStorage.removeItem(`voting_history_${votingState.walletAddress}`);
+                    localStorage.removeItem(`user_votes_${votingState.walletAddress}`);
+                }
+            } else {
+                console.log('🗳️ Backend has votes, keeping frontend state');
+            }
+        }
+    } catch (error) {
+        console.error('🗳️ Error syncing with backend:', error);
+    }
+}
+
 // API Functions
 async function fetchActivePolls() {
     try {
@@ -2914,6 +2949,9 @@ async function setupVotingSystem() {
         // Fallback: generate a unique wallet address for this session
         votingState.walletAddress = '0x' + Math.random().toString(16).substr(2, 40);
     }
+    
+    // Sync voting state with backend to ensure consistency
+    await syncVotingStateWithBackend();
     
     // Reset voting UI to show voting options instead of results
     resetVotingUI();
@@ -3393,6 +3431,9 @@ async function reinitializeVotingSystem() {
         console.log('🗳️ Wallet address:', votingState.walletAddress);
     }
     
+    // Sync voting state with backend to ensure consistency
+    await syncVotingStateWithBackend();
+    
     // Fetch fresh data from API and update poll cards first
     await updatePollCardsWithRealData();
     
@@ -3435,5 +3476,6 @@ window.setupVotingSystem = setupVotingSystem;
 window.resetVotingUI = resetVotingUI;
 window.clearVotingStateForNewWallet = clearVotingStateForNewWallet;
 window.checkWalletChange = checkWalletChange;
+window.syncVotingStateWithBackend = syncVotingStateWithBackend;
 
 document.addEventListener("DOMContentLoaded",()=>{console.log("🚀 Protocol SPA Initializing..."),console.log("🧹 Clearing old wallet test data..."),localStorage.removeItem("walletConnected"),localStorage.removeItem("walletPremium"),localStorage.removeItem("walletPublicKey"),localStorage.removeItem("imgProtocolWalletState"),d.isConnected=!1,d.isPremium=!1,d.walletAddress="",d.currentPage="dashboard",console.log("🔄 App state reset:",d),f(),console.log("🔧 Sidebar initialized"),window.walletManager=new Re,p.start(),p("/terminal"),console.log("🎯 Initializing clean donut chart..."),Promise.resolve().then(()=>{N()}),setInterval(()=>{const i=document.getElementById("clean-donut-chart");i&&i.querySelectorAll(".daily-pie-segment").length===0&&(console.log("🔄 Chart segments missing, restoring..."),N())},500);const t=new MutationObserver(i=>{i.forEach(s=>{s.type==="childList"&&s.addedNodes.forEach(n=>{n.nodeType===Node.ELEMENT_NODE&&n.querySelector&&n.querySelector("#clean-donut-chart")&&(console.log("🚀 Dashboard chart detected, initializing immediately!"),Promise.resolve().then(()=>{N()}))})})}),a=document.getElementById("main-content");a&&t.observe(a,{childList:!0,subtree:!0});const u=new MutationObserver(i=>{i.forEach(s=>{s.type==="childList"&&s.addedNodes.forEach(n=>{n.nodeType===Node.ELEMENT_NODE&&n.querySelector&&n.querySelector(".vote-page")&&(reinitializeVotingSystem())})})});a&&u.observe(a,{childList:!0,subtree:!0});setInterval(()=>{checkAndRestoreVotingState()},500),We(),setupEventIcons(),setupHarvestingPage(),setupDistributionPage(),setupVotingSystem(),initializeVotingOnPageLoad(),setTimeout(()=>{const i=document.getElementById("sidebar-container");console.log("🔍 Sidebar container:",i),console.log("🔍 Sidebar content:",i?i.innerHTML.length:"null"),i&&!i.innerHTML.trim()&&(console.log("🔧 Sidebar empty, forcing update with current state..."),console.log("🔧 Current app state:",d),f())},50),console.log("✅ Protocol SPA Ready!")});
