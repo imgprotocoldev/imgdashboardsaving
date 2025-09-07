@@ -2820,17 +2820,17 @@ async function loadActivePolls() {
 
 // Update poll cards with real data
 function updatePollCards(polls) {
-    polls.forEach(poll => {
+            polls.forEach(poll => {
         const pollCard = document.querySelector(`[data-poll-id="${poll.id}"]`);
-        if (pollCard) {
-            const titleElement = pollCard.querySelector('.poll-title');
-            const descElement = pollCard.querySelector('.poll-description');
-            
-            if (titleElement) titleElement.textContent = poll.title;
-            if (descElement) descElement.textContent = poll.description;
+                if (pollCard) {
+                    const titleElement = pollCard.querySelector('.poll-title');
+                    const descElement = pollCard.querySelector('.poll-description');
+                    
+                    if (titleElement) titleElement.textContent = poll.title;
+                    if (descElement) descElement.textContent = poll.description;
+                }
+            });
         }
-    });
-}
 
 // SIMPLE: Check if user has already voted by fetching votes from backend
 async function checkUserVoted(pollId, walletAddress) {
@@ -3136,10 +3136,16 @@ function setupVotingEventListeners() {
             transition: width 0.4s ease;
         }
         .yes-fill {
-            background: linear-gradient(90deg, #10b981, #34d399);
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
         }
         .no-fill {
-            background: linear-gradient(90deg, #ef4444, #f87171);
+            background: linear-gradient(90deg, #1e40af, #3b82f6);
+        }
+        .abstain-fill {
+            background: linear-gradient(90deg, #1d4ed8, #2563eb);
+        }
+        .default-fill {
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
         }
         .results-footer {
             text-align: center;
@@ -3163,8 +3169,8 @@ function setupVotingEventListeners() {
     // Debug: Check poll options CSS and state
     setTimeout(() => {
         console.log('✅ DEBUGGING POLL OPTIONS - IMPROVED SENSITIVITY!');
-        for (let i = 1; i <= 3; i++) {
-            const pollOptions = document.getElementById(`poll-options-${i}`);
+    for (let i = 1; i <= 3; i++) {
+        const pollOptions = document.getElementById(`poll-options-${i}`);
             if (pollOptions) {
                 console.log(`✅ Poll ${i} options:`, pollOptions);
                 console.log(`✅ Poll ${i} pointer-events:`, window.getComputedStyle(pollOptions).pointerEvents);
@@ -3243,12 +3249,12 @@ function selectPollOption(pollId, option) {
     
     // Remove previous selections
     pollCard.querySelectorAll('.poll-option').forEach(opt => {
-        opt.classList.remove('selected');
-        const circle = opt.querySelector('.option-circle');
+                opt.classList.remove('selected');
+                const circle = opt.querySelector('.option-circle');
         if (circle) circle.classList.remove('selected');
-    });
-    
-    // Select current option
+            });
+            
+            // Select current option
     const selectedOption = pollCard.querySelector(`[data-option="${option}"]`);
     if (selectedOption) {
         selectedOption.classList.add('selected');
@@ -3263,10 +3269,10 @@ function selectPollOption(pollId, option) {
     // Enable submit button - NO RESTRICTIONS
     const submitBtn = pollCard.querySelector('.submit-vote-btn');
     if (submitBtn) {
-        submitBtn.disabled = false;
+            submitBtn.disabled = false;
         submitBtn.dataset.selectedOption = option;
         submitBtn.textContent = 'Submit Vote';
-        submitBtn.style.background = '#3b82f6';
+            submitBtn.style.background = '#3b82f6';
         console.log(`✅ SUBMIT BUTTON ENABLED FOR POLL ${pollId} WITH OPTION: ${option}`);
         console.log(`🔍 Submit button dataset:`, submitBtn.dataset);
     } else {
@@ -3282,14 +3288,14 @@ async function submitVote(pollId, option) {
     const pollCard = document.querySelector(`[data-poll-id="${pollId}"]`);
     if (!pollCard) {
         console.log(`❌ Poll card not found for ID: ${pollId}`);
-        return;
-    }
-    
+                return;
+            }
+            
     const submitBtn = pollCard.querySelector('.submit-vote-btn');
     if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Submitting...';
-        submitBtn.style.background = '#6b7280';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            submitBtn.style.background = '#6b7280';
     }
     
     try {
@@ -3306,7 +3312,7 @@ async function submitVote(pollId, option) {
             // Update button to "Vote Recorded" for both new votes and already voted
             if (submitBtn) {
                 submitBtn.textContent = '✓ Vote Recorded';
-                submitBtn.style.background = '#10b981';
+                    submitBtn.style.background = '#10b981';
             }
             
             // Disable poll options
@@ -3323,7 +3329,7 @@ async function submitVote(pollId, option) {
             await displayPollResultsImmediate(pollId, option);
             
             console.log(`✅ VOTING COMPLETED FOR POLL ${pollId}!`);
-        } else {
+                } else {
             // Reset button on failure
             if (submitBtn) {
                 submitBtn.disabled = false;
@@ -3331,16 +3337,16 @@ async function submitVote(pollId, option) {
                 submitBtn.style.background = '#3b82f6';
             }
             console.error('❌ Vote submission failed:', result.error);
-        }
-    } catch (error) {
+                }
+            } catch (error) {
         console.error('❌ Error in submitVote:', error);
-        
+                
         // Reset button on error
         if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Submit Vote';
-            submitBtn.style.background = '#3b82f6';
-        }
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Vote';
+                submitBtn.style.background = '#3b82f6';
+            }
     }
 }
 
@@ -3372,13 +3378,23 @@ async function displayPollResultsImmediate(pollId, selectedOption) {
     
     // Fetch and display real results
     try {
+        console.log(`🔍 Fetching results for poll ${pollId}`);
         const results = await fetchPollResults(pollId);
+        console.log(`📊 Results received:`, results);
+        
         if (results) {
             const resultsHTML = createResultsHTML(pollId, results);
+            console.log(`📝 Generated HTML:`, resultsHTML);
+            
             const pollExplanation = pollCard.querySelector('.poll-explanation');
             if (pollExplanation) {
+                console.log(`✅ Inserting results after poll explanation`);
                 pollExplanation.insertAdjacentHTML('afterend', resultsHTML);
+            } else {
+                console.log(`❌ Poll explanation not found`);
             }
+        } else {
+            console.log(`❌ No results received from backend`);
         }
     } catch (error) {
         console.error('Error fetching results:', error);
@@ -3433,16 +3449,29 @@ function getOptionDisplayName(option) {
     const displayNames = {
         'yes': 'Yes',
         'no': 'No',
-        'abstain': 'Abstain'
+        'abstain': 'Abstain',
+        'approve': 'Approve',
+        'reject': 'Reject',
+        'support': 'Support',
+        'oppose': 'Oppose',
+        'for': 'For',
+        'against': 'Against'
     };
     return displayNames[option] || option.charAt(0).toUpperCase() + option.slice(1);
 }
 
 function getOptionFillClass(option) {
+    // Define blue color variations for different options
     const fillClasses = {
         'yes': 'yes-fill',
-        'no': 'no-fill',
-        'abstain': 'abstain-fill'
+        'no': 'no-fill', 
+        'abstain': 'abstain-fill',
+        'approve': 'yes-fill',
+        'reject': 'no-fill',
+        'support': 'yes-fill',
+        'oppose': 'no-fill',
+        'for': 'yes-fill',
+        'against': 'no-fill'
     };
     return fillClasses[option] || 'default-fill';
 }
@@ -3499,9 +3528,9 @@ function displayPollResults(pollId, results) {
         pollExplanation.insertAdjacentHTML('afterend', resultsHtml);
     } else {
         // Fallback: insert at end of poll content
-        const pollContent = pollCard.querySelector('.poll-content');
-        if (pollContent) {
-            pollContent.insertAdjacentHTML('beforeend', resultsHtml);
+    const pollContent = pollCard.querySelector('.poll-content');
+    if (pollContent) {
+        pollContent.insertAdjacentHTML('beforeend', resultsHtml);
         }
     }
 }
@@ -3539,27 +3568,22 @@ window.showDetailedResults = async function(pollId) {
                 votesByOption[vote.vote_option].push(vote.wallet_address);
             });
             
-            // Calculate percentages and create poll object
+            // Calculate percentages and create poll object dynamically
             const totalVotes = votesData.votes.length;
             const poll = {
                 question: pollData.poll.title,
                 totalVotes: totalVotes,
-                yes: {
-                    percentage: totalVotes > 0 ? ((votesByOption.yes?.length || 0) / totalVotes * 100).toFixed(1) : '0.0',
-                    votes: votesByOption.yes?.length || 0,
-                    wallets: votesByOption.yes || []
-                },
-                no: {
-                    percentage: totalVotes > 0 ? ((votesByOption.no?.length || 0) / totalVotes * 100).toFixed(1) : '0.0',
-                    votes: votesByOption.no?.length || 0,
-                    wallets: votesByOption.no || []
-                },
-                abstain: {
-                    percentage: totalVotes > 0 ? ((votesByOption.abstain?.length || 0) / totalVotes * 100).toFixed(1) : '0.0',
-                    votes: votesByOption.abstain?.length || 0,
-                    wallets: votesByOption.abstain || []
-                }
+                options: {}
             };
+            
+            // Dynamically create options based on what's in the votes
+            Object.keys(votesByOption).forEach(option => {
+                poll.options[option] = {
+                    percentage: totalVotes > 0 ? ((votesByOption[option]?.length || 0) / totalVotes * 100).toFixed(1) : '0.0',
+                    votes: votesByOption[option]?.length || 0,
+                    wallets: votesByOption[option] || []
+                };
+            });
             
             console.log(`✅ REAL POLL DATA LOADED:`, poll);
             
@@ -3598,56 +3622,24 @@ function showPollResultsModal(poll) {
                     </div>
                     
                     <div class="results-sections">
-                        <div class="result-section">
-                            <div class="result-section-header">
-                                <span class="result-option">Yes</span>
-                                <span class="result-stats">${poll.yes.percentage}% (${poll.yes.votes} votes)</span>
+                        ${Object.keys(poll.options).map(option => `
+                            <div class="result-section">
+                                <div class="result-section-header">
+                                    <span class="result-option">${getOptionDisplayName(option)}</span>
+                                    <span class="result-stats">${poll.options[option].percentage}% (${poll.options[option].votes} votes)</span>
+                                </div>
+                                <div class="wallet-list">
+                                    ${poll.options[option].wallets.length > 0 ? 
+                                        poll.options[option].wallets.map(wallet => 
+                                            `<div class="wallet-item">
+                                                <span class="wallet-address">${truncateWalletAddress(wallet)}</span>
+                                            </div>`
+                                        ).join('') : 
+                                        '<div class="no-wallets">No wallets voted for this option</div>'
+                                    }
+                                </div>
                             </div>
-                            <div class="wallet-list">
-                                ${poll.yes.wallets.length > 0 ? 
-                                    poll.yes.wallets.map(wallet => 
-                                        `<div class="wallet-item">
-                                            <span class="wallet-address">${truncateWalletAddress(wallet)}</span>
-                                        </div>`
-                                    ).join('') : 
-                                    '<div class="no-wallets">No wallets voted for this option</div>'
-                                }
-                            </div>
-                        </div>
-                        
-                        <div class="result-section">
-                            <div class="result-section-header">
-                                <span class="result-option">No</span>
-                                <span class="result-stats">${poll.no.percentage}% (${poll.no.votes} votes)</span>
-                            </div>
-                            <div class="wallet-list">
-                                ${poll.no.wallets.length > 0 ? 
-                                    poll.no.wallets.map(wallet => 
-                                        `<div class="wallet-item">
-                                            <span class="wallet-address">${truncateWalletAddress(wallet)}</span>
-                                        </div>`
-                                    ).join('') : 
-                                    '<div class="no-wallets">No wallets voted for this option</div>'
-                                }
-                            </div>
-                        </div>
-                        
-                        <div class="result-section">
-                            <div class="result-section-header">
-                                <span class="result-option">Abstain</span>
-                                <span class="result-stats">${poll.abstain.percentage}% (${poll.abstain.votes} votes)</span>
-                            </div>
-                            <div class="wallet-list">
-                                ${poll.abstain.wallets.length > 0 ? 
-                                    poll.abstain.wallets.map(wallet => 
-                                        `<div class="wallet-item">
-                                            <span class="wallet-address">${truncateWalletAddress(wallet)}</span>
-                                        </div>`
-                                    ).join('') : 
-                                    '<div class="no-wallets">No wallets voted for this option</div>'
-                                }
-                            </div>
-                        </div>
+                        `).join('')}
                     </div>
                 </div>
             </div>
