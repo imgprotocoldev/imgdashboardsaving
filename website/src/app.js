@@ -2742,7 +2742,8 @@ async function fetchPollResults(pollId) {
 const votingState = {
     apiBaseUrl: 'https://img-protocol-backend.onrender.com',
     initialized: false,
-    currentWallet: null
+    currentWallet: null,
+    walletVoteStatus: {} // Track voting status per poll for current wallet
 };
 
 // Initialize voting system
@@ -3274,7 +3275,11 @@ async function submitVote(pollId, option) {
             votingState.walletVoteStatus[pollId] = true;
             
             // Show poll results immediately from backend
+            console.log(`🔄 About to call displayPollResultsAfterVote for poll ${pollId}`);
+            console.log(`🚨 TESTING: Calling displayPollResultsAfterVote NOW!`);
             await displayPollResultsAfterVote(pollId);
+            console.log(`✅ displayPollResultsAfterVote completed for poll ${pollId}`);
+            console.log(`🚨 TESTING: Function call completed!`);
             
             console.log(`✅ VOTING COMPLETED FOR POLL ${pollId}!`);
         } else {
@@ -3300,17 +3305,26 @@ async function submitVote(pollId, option) {
 
 // SIMPLE: Display poll results after voting
 async function displayPollResultsAfterVote(pollId) {
+    console.log(`🔍 DISPLAYING POLL RESULTS AFTER VOTE: poll ${pollId}`);
+    
     const pollCard = document.querySelector(`[data-poll-id="${pollId}"]`);
-    if (!pollCard) return;
+    if (!pollCard) {
+        console.log(`❌ Poll card not found for ID: ${pollId}`);
+        return;
+    }
+    
+    console.log(`✅ Poll card found for ID: ${pollId}`);
     
     // Clean up any existing results
     const existingResults = pollCard.querySelectorAll('.poll-results-compact, .poll-results, [class*="results"]');
     existingResults.forEach(result => result.remove());
+    console.log(`🧹 Cleaned up ${existingResults.length} existing results`);
     
     // Hide voting options
     const pollOptions = pollCard.querySelector('.poll-options');
     if (pollOptions) {
         pollOptions.style.display = 'none';
+        console.log(`✅ Hidden voting options`);
     }
     
     // Update submit button
@@ -3319,43 +3333,66 @@ async function displayPollResultsAfterVote(pollId) {
         submitBtn.innerHTML = `✓ Vote Recorded`;
         submitBtn.className = 'vote-recorded-btn';
         submitBtn.disabled = true;
+        console.log(`✅ Updated submit button to "Vote Recorded"`);
     }
     
     // Fetch and display results
     try {
+        // Add a small delay to ensure backend has processed the vote
+        console.log(`⏳ Waiting 500ms for backend to process vote...`);
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        console.log(`📡 Fetching results from: ${votingState.apiBaseUrl}/api/polls/${pollId}/results`);
         const response = await fetch(`${votingState.apiBaseUrl}/api/polls/${pollId}/results`);
         const data = await response.json();
         
+        console.log(`📊 Results response:`, data);
+        
         if (data.success) {
+            console.log(`✅ Results data received:`, data.results);
             const resultsHTML = createResultsHTML(pollId, data.results);
+            console.log(`📝 Generated results HTML:`, resultsHTML);
+            
             const pollExplanation = pollCard.querySelector('.poll-explanation');
             if (pollExplanation) {
                 pollExplanation.insertAdjacentHTML('afterend', resultsHTML);
+                console.log(`✅ Results HTML inserted after poll explanation`);
+            } else {
+                console.log(`❌ Poll explanation not found`);
             }
+        } else {
+            console.log(`❌ Results fetch failed:`, data.error);
         }
     } catch (error) {
-        console.error('Error fetching results:', error);
+        console.error('❌ Error fetching results:', error);
     }
 }
 
 // Create results HTML with real backend data
 function createResultsHTML(pollId, results) {
+    console.log(`🔧 Creating results HTML for poll ${pollId}:`, results);
+    
     const totalVotes = results.total || 0;
+    console.log(`📊 Total votes: ${totalVotes}`);
     
     // Generate result rows dynamically based on available options
     let resultRowsHTML = '';
     
     // Handle backend data format: { total: 5, yes: 3, no: 2, percentages: { yes: "60.0", no: "40.0" } }
     const percentages = results.percentages || {};
+    console.log(`📊 Percentages:`, percentages);
     
     // Get all options from percentages object
     const options = Object.keys(percentages);
+    console.log(`📊 Options:`, options);
     
     options.forEach(option => {
         const percentage = percentages[option] || '0.0';
         const votes = results[option] || 0;
         const displayName = getOptionDisplayName(option);
         const fillClass = getOptionFillClass(option);
+        
+        console.log(`📊 Processing option ${option}: ${percentage}% (${votes} votes)`);
         
         resultRowsHTML += `
             <div class="result-row">
@@ -3368,7 +3405,7 @@ function createResultsHTML(pollId, results) {
         `;
     });
     
-    return `
+    const finalHTML = `
         <div class="poll-results-compact">
             <div class="results-list">
                 ${resultRowsHTML}
@@ -3378,6 +3415,9 @@ function createResultsHTML(pollId, results) {
             </div>
         </div>
     `;
+    
+    console.log(`📝 Final HTML generated:`, finalHTML);
+    return finalHTML;
 }
 
 
