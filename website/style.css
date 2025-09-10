@@ -3031,7 +3031,8 @@
 
 /* Voting Sections - Container styling matching events page */
 .voting-section {
-    margin-bottom: 30px;
+    margin-top: 20px;
+    width: 100%;
 }
 
 .section-title {
@@ -3052,14 +3053,19 @@
 }
 
 .voting-history-container {
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.6));
-    border: 1px solid rgba(148, 163, 184, 0.1);
-    border-radius: 12px;
+    background: linear-gradient(135deg, #1e293b, #334155);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
     padding: 24px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    min-height: 240px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
-    
+
 /* Active Polls Banner - Professional Single Poll Layout */
 .active-polls-banner {
     margin-top: 20px;
@@ -3075,6 +3081,9 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(20px);
     min-height: 240px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .banner-background {
@@ -3755,32 +3764,35 @@
 .completed-polls-section {
     padding: 0;
     width: 100%;
-    margin-top: 24px;
+    margin-top: 12px;
     margin-bottom: 0;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .completed-polls-section .section-header {
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 8px;
 }
 
 .completed-polls-section .section-header h2 {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 600;
     color: var(--text-primary);
     margin: 0;
 }
 
 /* Voting History Spreadsheet - Simple Professional */
-.polls-spreadsheet {
-    background: var(--bg-secondary);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+.polls-spreadsheet-wrapper {
     width: 100%;
-        margin: 0;
-    max-height: 345px;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.polls-spreadsheet {
+    width: 100%;
+    margin: 0;
+    max-height: 200px;
     overflow-y: auto;
 }
 
@@ -3829,10 +3841,6 @@
     box-sizing: border-box;
 }
 
-.polls-spreadsheet .header-cell:last-child {
-    border-right: none;
-}
-
 
 .polls-spreadsheet .spreadsheet-row {
     display: grid;
@@ -3864,10 +3872,6 @@
     font-weight: 500;
     line-height: 1.4;
     text-align: left;
-}
-
-.polls-spreadsheet .data-cell:last-child {
-    border-right: none;
 }
 
 .poll-id {
@@ -3983,7 +3987,7 @@
     }
     
     .completed-polls-section {
-        margin-top: 20px;
+        margin-top: 8px;
     }
     
     .poll-card,
@@ -4174,7 +4178,7 @@
     }
     
     .completed-polls-section {
-        margin-top: 16px;
+        margin-top: 6px;
     }
     
     /* Mobile spreadsheet - using same scroller approach as harvesting */
@@ -4321,3 +4325,4 @@
         gap: 6px;
     }
 }
+

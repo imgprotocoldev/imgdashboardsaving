@@ -1560,7 +1560,7 @@
                 
         <!-- Voting History Section -->
         <div class="voting-section">
-            <div class="voting-history-container">
+            <div class="polls-container">
                 <h2 class="section-title">Voting History</h2>
         <div class="completed-polls-section">
             <div class="polls-spreadsheet-wrapper">
@@ -1661,8 +1661,6 @@
                     <div class="data-cell poll-no">58.8%</div>
                     <div class="data-cell poll-votes">1.9M</div>
                     <div class="data-cell poll-date">Sep 18, 2024</div>
-                </div>
-                    </div>
                 </div>
                     </div>
                 </div>
