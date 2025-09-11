@@ -1505,11 +1505,11 @@
                 
                 <div class="banner-content">
                     <div class="banner-left-section">
-                        <h2 class="banner-question">Should we reduce the protocol fee from 2.5% to 2.0%?</h2>
+                        <h2 class="banner-question">Are You Enjoying the Dashboard?</h2>
                         
                         <div class="banner-explanation">
-                            <p>This proposal aims to reduce transaction costs for users while maintaining protocol sustainability. The 0.5% reduction would make our platform more competitive in the DeFi space and attract more users to our ecosystem.</p>
-                            <p>Our current protocol fee of 2.5% was established during the early stages of the platform when we needed to ensure sufficient revenue for development and maintenance. However, as the platform has matured and our user base has grown, we believe we can reduce this fee while still maintaining sustainable operations.</p>
+                            <p>This is the first edition of the IMG Dashboard, and your feedback will guide Version 2. Planned upgrades include improved design and colors, a more professional look, correct formatting on all devices, and new pages with deeper insights.</p>
+                            <p>If you're happy with the current version, let us know! If not, your vote will help shape the improvements.</p>
                         </div>
                     </div>
                     
@@ -1522,25 +1522,25 @@
                     </div>
                 </div>
                         <div class="poll-options" id="poll-options-1">
-                    <div class="poll-option" data-option="yes">
+                    <div class="poll-option" data-option="option1">
                         <div class="option-selector">
                             <div class="option-circle"></div>
                         </div>
-                                <span class="option-text">Yes - Reduce to 2.0%</span>
+                                <span class="option-text">Enjoying the Dashboard</span>
                     </div>
                     
-                    <div class="poll-option" data-option="no">
+                    <div class="poll-option" data-option="option2">
                         <div class="option-selector">
                             <div class="option-circle"></div>
                         </div>
-                                <span class="option-text">No - Keep at 2.5%</span>
+                                <span class="option-text">Just Okay</span>
                     </div>
                     
-                    <div class="poll-option" data-option="abstain">
+                    <div class="poll-option" data-option="option3">
                         <div class="option-selector">
                             <div class="option-circle"></div>
                         </div>
-                        <span class="option-text">Abstain</span>
+                        <span class="option-text">This is bad</span>
                     </div>
                 </div>
                 
@@ -3354,6 +3354,9 @@ function createResultsHTML(pollId, results) {
 // Helper functions for option display
 function getOptionDisplayName(option) {
     const displayNames = {
+        'option1': 'Enjoying the Dashboard',
+        'option2': 'Just Okay',
+        'option3': 'This is bad',
         'yes': 'Yes',
         'no': 'No',
         'abstain': 'Abstain',
@@ -3370,6 +3373,9 @@ function getOptionDisplayName(option) {
 function getOptionFillClass(option) {
     // Define blue color variations for different options
     const fillClasses = {
+        'option1': 'yes-fill',
+        'option2': 'no-fill', 
+        'option3': 'abstain-fill',
         'yes': 'yes-fill',
         'no': 'no-fill', 
         'abstain': 'abstain-fill',

@@ -1505,11 +1505,11 @@
                 
                 <div class="banner-content">
                     <div class="banner-left-section">
-                        <h2 class="banner-question">Should we reduce the protocol fee from 2.5% to 2.0%?</h2>
+                        <h2 class="banner-question">Are You Enjoying the Dashboard?</h2>
                         
                         <div class="banner-explanation">
-                            <p>This proposal aims to reduce transaction costs for users while maintaining protocol sustainability. The 0.5% reduction would make our platform more competitive in the DeFi space and attract more users to our ecosystem.</p>
-                            <p>Our current protocol fee of 2.5% was established during the early stages of the platform when we needed to ensure sufficient revenue for development and maintenance. However, as the platform has matured and our user base has grown, we believe we can reduce this fee while still maintaining sustainable operations.</p>
+                            <p>This is the first edition of the IMG Dashboard, and your feedback will guide Version 2. Planned upgrades include improved design and colors, a more professional look, correct formatting on all devices, and new pages with deeper insights.</p>
+                            <p>If you're happy with the current version, let us know! If not, your vote will help shape the improvements.</p>
                         </div>
                     </div>
                     
@@ -1522,25 +1522,25 @@
                     </div>
                 </div>
                         <div class="poll-options" id="poll-options-1">
-                    <div class="poll-option" data-option="yes">
+                    <div class="poll-option" data-option="option1">
                         <div class="option-selector">
                             <div class="option-circle"></div>
                         </div>
-                                <span class="option-text">Yes - Reduce to 2.0%</span>
+                                <span class="option-text">Enjoying the Dashboard</span>
                     </div>
                     
-                    <div class="poll-option" data-option="no">
+                    <div class="poll-option" data-option="option2">
                         <div class="option-selector">
                             <div class="option-circle"></div>
                         </div>
-                                <span class="option-text">No - Keep at 2.5%</span>
+                                <span class="option-text">Just Okay</span>
                     </div>
                     
-                    <div class="poll-option" data-option="abstain">
+                    <div class="poll-option" data-option="option3">
                         <div class="option-selector">
                             <div class="option-circle"></div>
                         </div>
-                        <span class="option-text">Abstain</span>
+                        <span class="option-text">This is bad</span>
                     </div>
                 </div>
                 
@@ -1962,7 +1962,7 @@
                 <a href="#" onclick="showDetailedResults('${t}')" class="view-results-link">VIEW RESULTS</a>
             </div>
         </div>
-    `;return console.log("📝 Final HTML generated:",l),l}function mt(t){return{yes:"Yes",no:"No",abstain:"Abstain",approve:"Approve",reject:"Reject",support:"Support",oppose:"Oppose",for:"For",against:"Against"}[t]||t.charAt(0).toUpperCase()+t.slice(1)}function xe(t){return{yes:"yes-fill",no:"no-fill",abstain:"abstain-fill",approve:"yes-fill",reject:"no-fill",support:"yes-fill",oppose:"no-fill",for:"yes-fill",against:"no-fill"}[t]||"default-fill"}window.initializeVotingSystem=D;window.reinitializeVotingSystem=()=>{D()};window.showDetailedResults=async function(t){if(console.log(`📊 SHOWING DETAILED RESULTS FOR POLL ${t} - REAL BACKEND DATA`),!t){console.error("❌ No pollId provided to showDetailedResults");return}try{const[e,s]=await Promise.all([fetch(`${v.apiBaseUrl}/api/polls/${t}`).then(i=>i.json()),fetch(`${v.apiBaseUrl}/api/polls/${t}/votes`).then(i=>i.json())]);if(e.success&&s.success){const i={};s.votes.forEach(l=>{i[l.vote_option]||(i[l.vote_option]=[]),i[l.vote_option].push(l.wallet_address)});const o=s.votes.length,a={question:e.poll.title,totalVotes:o,options:{}};Object.keys(i).forEach(l=>{var n,r;a.options[l]={percentage:o>0?((((n=i[l])==null?void 0:n.length)||0)/o*100).toFixed(1):"0.0",votes:((r=i[l])==null?void 0:r.length)||0,wallets:i[l]||[]}}),console.log("✅ REAL POLL DATA LOADED:",a),Se(a)}else console.error("❌ Failed to fetch poll data:",e.error||s.error)}catch(e){console.error("❌ Error fetching detailed results:",e)}};function Se(t){const e=document.getElementById("poll-results-modal");e&&e.remove();const s=`
+    `;return console.log("📝 Final HTML generated:",l),l}function mt(t){return{option1:"Enjoying the Dashboard",option2:"Just Okay",option3:"This is bad",yes:"Yes",no:"No",abstain:"Abstain",approve:"Approve",reject:"Reject",support:"Support",oppose:"Oppose",for:"For",against:"Against"}[t]||t.charAt(0).toUpperCase()+t.slice(1)}function xe(t){return{option1:"yes-fill",option2:"no-fill",option3:"abstain-fill",yes:"yes-fill",no:"no-fill",abstain:"abstain-fill",approve:"yes-fill",reject:"no-fill",support:"yes-fill",oppose:"no-fill",for:"yes-fill",against:"no-fill"}[t]||"default-fill"}window.initializeVotingSystem=D;window.reinitializeVotingSystem=()=>{D()};window.showDetailedResults=async function(t){if(console.log(`📊 SHOWING DETAILED RESULTS FOR POLL ${t} - REAL BACKEND DATA`),!t){console.error("❌ No pollId provided to showDetailedResults");return}try{const[e,s]=await Promise.all([fetch(`${v.apiBaseUrl}/api/polls/${t}`).then(i=>i.json()),fetch(`${v.apiBaseUrl}/api/polls/${t}/votes`).then(i=>i.json())]);if(e.success&&s.success){const i={};s.votes.forEach(l=>{i[l.vote_option]||(i[l.vote_option]=[]),i[l.vote_option].push(l.wallet_address)});const o=s.votes.length,a={question:e.poll.title,totalVotes:o,options:{}};Object.keys(i).forEach(l=>{var n,r;a.options[l]={percentage:o>0?((((n=i[l])==null?void 0:n.length)||0)/o*100).toFixed(1):"0.0",votes:((r=i[l])==null?void 0:r.length)||0,wallets:i[l]||[]}}),console.log("✅ REAL POLL DATA LOADED:",a),Se(a)}else console.error("❌ Failed to fetch poll data:",e.error||s.error)}catch(e){console.error("❌ Error fetching detailed results:",e)}};function Se(t){const e=document.getElementById("poll-results-modal");e&&e.remove();const s=`
         <div id="poll-results-modal" class="poll-results-modal-overlay">
             <div class="poll-results-modal">
                 <div class="modal-header">
