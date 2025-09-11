@@ -443,11 +443,16 @@ app.post('/api/polls/:id/vote', async (req, res) => {
                 const options = JSON.parse(poll.options);
                 console.log(`📊 Current poll options before update:`, options);
                 
-                options[voteOption]++;
+                // Handle both old format (yes/no/abstain) and new format (option1/option2/option3)
+                if (options[voteOption] !== undefined) {
+                    options[voteOption]++;
+                } else {
+                    // Initialize the option if it doesn't exist
+                    options[voteOption] = 1;
+                }
                 options.total++;
                 
                 console.log(`📊 Updated poll options after increment:`, options);
-                console.log(`📊 Updating poll ${id} with new options:`, JSON.stringify(options));
 
                 db.run('UPDATE polls SET options = ? WHERE id = ?', [JSON.stringify(options), id], (err) => {
                     if (err) {
@@ -494,17 +499,23 @@ app.get('/api/polls/:id/results', (req, res) => {
         const results = JSON.parse(poll.options);
         console.log(`📊 Raw poll options from database:`, results);
         
-        // Calculate percentages
-        const total = results.total;
+        // Calculate percentages - handle both old and new formats
+        const total = results.total || 0;
         console.log(`📊 Total votes: ${total}`);
-        console.log(`📊 Option1 votes: ${results.option1}`);
-        console.log(`📊 Option2 votes: ${results.option2}`);
-        console.log(`📊 Option3 votes: ${results.option3}`);
+        
+        // Get vote counts for each option (handle both formats)
+        const option1Votes = results.option1 || 0;
+        const option2Votes = results.option2 || 0;
+        const option3Votes = results.option3 || 0;
+        
+        console.log(`📊 Option1 votes: ${option1Votes}`);
+        console.log(`📊 Option2 votes: ${option2Votes}`);
+        console.log(`📊 Option3 votes: ${option3Votes}`);
         
         const percentages = {
-            option1: total > 0 ? ((results.option1 / total) * 100).toFixed(1) : "0.0",
-            option2: total > 0 ? ((results.option2 / total) * 100).toFixed(1) : "0.0",
-            option3: total > 0 ? ((results.option3 / total) * 100).toFixed(1) : "0.0"
+            option1: total > 0 ? ((option1Votes / total) * 100).toFixed(1) : "0.0",
+            option2: total > 0 ? ((option2Votes / total) * 100).toFixed(1) : "0.0",
+            option3: total > 0 ? ((option3Votes / total) * 100).toFixed(1) : "0.0"
         };
         
         console.log(`📊 Calculated percentages:`, percentages);
@@ -513,10 +524,10 @@ app.get('/api/polls/:id/results', (req, res) => {
             success: true, 
             results: {
                 voteCounts: {
-                    option1: results.option1,
-                    option2: results.option2,
-                    option3: results.option3,
-                    total: results.total
+                    option1: option1Votes,
+                    option2: option2Votes,
+                    option3: option3Votes,
+                    total: total
                 },
                 percentages: percentages,
                 poll: {
