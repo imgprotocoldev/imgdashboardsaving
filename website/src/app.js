@@ -3313,14 +3313,33 @@ function createResultsHTML(pollId, results) {
     const voteCounts = results.voteCounts || {};
     console.log(`📊 Percentages:`, percentages);
     console.log(`📊 Vote counts:`, voteCounts);
+    console.log(`📊 Full results object:`, JSON.stringify(results, null, 2));
+    
+    // Fallback: if new format is empty, try old format
+    let finalPercentages = percentages;
+    let finalVoteCounts = voteCounts;
+    
+    if (Object.keys(percentages).length === 0 && Object.keys(voteCounts).length === 0) {
+        console.log(`📊 Using fallback format - checking direct results properties`);
+        // Try old format: { option1: 1, option2: 0, option3: 0, total: 1, percentages: { option1: "100.0", option2: "0.0", option3: "0.0" } }
+        finalPercentages = results.percentages || {};
+        finalVoteCounts = {
+            option1: results.option1 || 0,
+            option2: results.option2 || 0,
+            option3: results.option3 || 0,
+            total: results.total || 0
+        };
+        console.log(`📊 Fallback percentages:`, finalPercentages);
+        console.log(`📊 Fallback vote counts:`, finalVoteCounts);
+    }
     
     // Get all options from percentages object
-    const options = Object.keys(percentages);
+    const options = Object.keys(finalPercentages);
     console.log(`📊 Options:`, options);
     
     options.forEach(option => {
-        const percentage = percentages[option] || '0.0';
-        const votes = voteCounts[option] || 0;
+        const percentage = finalPercentages[option] || '0.0';
+        const votes = finalVoteCounts[option] || 0;
         const displayName = getOptionDisplayName(option);
         const fillClass = getOptionFillClass(option);
         
