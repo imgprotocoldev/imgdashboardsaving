@@ -489,16 +489,21 @@ app.get('/api/polls/:id/results', (req, res) => {
         // Calculate percentages
         const total = results.total;
         const percentages = {
-            option1: total > 0 ? ((results.option1 / total) * 100).toFixed(1) : 0,
-            option2: total > 0 ? ((results.option2 / total) * 100).toFixed(1) : 0,
-            option3: total > 0 ? ((results.option3 / total) * 100).toFixed(1) : 0
+            option1: total > 0 ? ((results.option1 / total) * 100).toFixed(1) : "0.0",
+            option2: total > 0 ? ((results.option2 / total) * 100).toFixed(1) : "0.0",
+            option3: total > 0 ? ((results.option3 / total) * 100).toFixed(1) : "0.0"
         };
 
         res.json({ 
             success: true, 
             results: {
-                ...results,
-                percentages,
+                voteCounts: {
+                    option1: results.option1,
+                    option2: results.option2,
+                    option3: results.option3,
+                    total: results.total
+                },
+                percentages: percentages,
                 poll: {
                     id: poll.id,
                     title: poll.title,

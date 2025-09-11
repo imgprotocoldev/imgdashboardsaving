@@ -3302,15 +3302,17 @@ async function displayPollResultsAfterVote(pollId) {
 function createResultsHTML(pollId, results) {
     console.log(`🔧 Creating results HTML for poll ${pollId}:`, results);
     
-    const totalVotes = results.total || 0;
+    const totalVotes = results.voteCounts?.total || 0;
     console.log(`📊 Total votes: ${totalVotes}`);
     
     // Generate result rows dynamically based on available options
     let resultRowsHTML = '';
     
-    // Handle backend data format: { total: 5, yes: 3, no: 2, percentages: { yes: "60.0", no: "40.0" } }
+    // Handle backend data format: { voteCounts: { option1: 1, option2: 0, option3: 0, total: 1 }, percentages: { option1: "100.0", option2: "0.0", option3: "0.0" } }
     const percentages = results.percentages || {};
+    const voteCounts = results.voteCounts || {};
     console.log(`📊 Percentages:`, percentages);
+    console.log(`📊 Vote counts:`, voteCounts);
     
     // Get all options from percentages object
     const options = Object.keys(percentages);
@@ -3318,7 +3320,7 @@ function createResultsHTML(pollId, results) {
     
     options.forEach(option => {
         const percentage = percentages[option] || '0.0';
-        const votes = results[option] || 0;
+        const votes = voteCounts[option] || 0;
         const displayName = getOptionDisplayName(option);
         const fillClass = getOptionFillClass(option);
         
