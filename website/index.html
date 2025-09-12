@@ -26,7 +26,6 @@
                     isConnected = true;
                     publicKey = walletPublicKey || 'connected';
                     isPremium = walletPremium;
-                    console.log('🚀 PAGE WALLET: Direct connection detected');
                 }
                 // Secondary check: stored wallet state
                 else if (storedWalletState) {
@@ -36,10 +35,8 @@
                             isConnected = true;
                             publicKey = parsed.walletPublicKey;
                             isPremium = parsed.isPremium || false;
-                            console.log('🔄 PAGE WALLET: Stored state restored');
                         }
                     } catch (error) {
-                        console.error('❌ PAGE WALLET: Error parsing stored state:', error);
                     }
                 }
                 
@@ -53,16 +50,13 @@
                 };
                 
                 if (isConnected) {
-                    console.log('🚀 PAGE WALLET: Status set before page load:', window.pageWalletStatus);
                 } else {
-                    console.log('🔒 PAGE WALLET: No wallet connected');
                 }
                 
                 // Also set a global flag for immediate access
                 window.walletStateReady = true;
                 
             } catch (error) {
-                console.error('❌ PAGE WALLET: Error setting wallet status:', error);
                 // Set safe defaults
                 window.pageWalletStatus = {
                     isConnected: false,

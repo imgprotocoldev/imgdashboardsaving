@@ -1645,12 +1645,12 @@
                     <div class="data-cell poll-no"></div>
                     <div class="data-cell poll-votes">119</div>
                     <div class="data-cell poll-date">Aug 22, 2025</div>
+                    </div>
                 </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 `;class Re{constructor(){this.isConnected=!1,this.isPremium=!1,this.walletAddress="",this.requiredImgAmount=47500,this.imgTokenMint="znv3FZt2HFAvzYf5LxzVyryh3mBXWuTRRng25gEZAjh",this.solanaConnection=null,this.init()}init(){console.log("🔧 Initializing WalletManager..."),this.setupEventListeners(),this.initializeSolanaConnection()}initializeSolanaConnection(){try{if(typeof window<"u"&&window.solanaWeb3){const t=["https://mainnet.helius-rpc.com/?api-key=public","https://rpc.ankr.com/solana","https://solana-api.projectserum.com","https://api.mainnet-beta.solana.com"];this.solanaConnection=new window.solanaWeb3.Connection(t[0],"confirmed"),console.log("🌐 Solana connection initialized with Helius public RPC")}else console.log("⚠️ Solana Web3 not available, will use backup verification")}catch(t){console.error("❌ Failed to initialize Solana connection:",t)}}setupEventListeners(){console.log("🔧 Setting up wallet event listeners..."),setTimeout(()=>{window.walletClickHandler&&document.removeEventListener("click",window.walletClickHandler),window.walletClickHandler=t=>{const a=t.target.closest("[id], [data-provider]");if(!a)return;if(t.preventDefault(),t.stopPropagation(),a.id==="connect-wallet-btn"){console.log("🖱️ Wallet button clicked, current state:",this.isConnected),this.isConnected?this.disconnect():this.showWalletModal();return}if(a.id==="wallet-modal-close"){console.log("🖱️ Modal close clicked"),this.hideWalletModal();return}const i=a.getAttribute("data-provider");if(i==="phantom"){console.log("🖱️ Phantom provider clicked"),this.connectPhantom();return}if(i==="solflare"){console.log("🖱️ Solflare provider clicked"),this.connectSolflare();return}if(a.id==="wallet-modal"){console.log("🖱️ Modal background clicked"),this.hideWalletModal();return}},document.addEventListener("click",window.walletClickHandler),console.log("✅ Global wallet click handler attached")},50)}showWalletModal(){console.log("🔄 showWalletModal called");const t=document.getElementById("wallet-modal");if(t)console.log("✅ Modal found, showing..."),t.classList.add("show"),console.log("✅ Modal should now be visible");else{console.error("❌ Wallet modal not found in DOM!");const a=document.querySelectorAll(".wallet-modal");console.log("🔍 Found wallet-modal elements:",a.length)}}hideWalletModal(){const t=document.getElementById("wallet-modal");t&&t.classList.remove("show")}async connectPhantom(){console.log("🦄 Attempting Phantom connection...");try{if(!window.solana||!window.solana.isPhantom)throw new Error("Phantom wallet not found. Please install Phantom wallet extension.");this.showConnectingStatus();const a=(await window.solana.connect()).publicKey.toString();console.log("🦄 Phantom connected:",a),await this.handleWalletConnection(a,"Phantom")}catch(t){console.error("❌ Phantom connection failed:",t),this.showConnectionError(t.message)}}async connectSolflare(){console.log("🔥 Attempting Solflare connection...");try{if(!window.solflare||!window.solflare.isSolflare)throw new Error("Solflare wallet not found. Please install Solflare wallet extension.");this.showConnectingStatus();const a=(await window.solflare.connect()).publicKey.toString();console.log("🔥 Solflare connected:",a),await this.handleWalletConnection(a,"Solflare")}catch(t){console.error("❌ Solflare connection failed:",t),this.showConnectionError(t.message)}}async handleWalletConnection(t,a){try{console.log(`🔍 Verifying tokens for ${a}: ${t}`);const i=await this.verifyImgTokens(t),s=i>=this.requiredImgAmount;console.log(`   Token Balance: ${i}`),console.log(`   Required Amount: ${this.requiredImgAmount}`),console.log(`   Balance >= Required: ${i} >= ${this.requiredImgAmount} = ${s}`),console.log(`   Premium Access Granted: ${s?"YES ✅":"NO ❌"}`);let n=s;i>0&&i>=47500&&(n=!0,console.log("🎯 TESTING: Forcing premium access for wallets with 47,500+")),this.isConnected=!0,this.isPremium=n,this.walletAddress=t,d.isConnected=!0,d.isPremium=n,d.walletAddress=t,localStorage.setItem("walletConnected","true"),localStorage.setItem("walletAddress",t),localStorage.setItem("walletPremium",n.toString()),localStorage.setItem("walletProvider",a),this.hideWalletModal(),this.updateSidebar(),console.log(`✅ ${a} connected successfully!`),console.log(`💰 Balance: ${i.toLocaleString()} (Required: ${this.requiredImgAmount.toLocaleString()})`),console.log(`🌟 Final Premium Access: ${n?"YES ✅":"NO ❌"}`)}catch(i){console.error("❌ Failed to verify wallet:",i),this.showConnectionError("Failed to verify wallet. Please try again.")}}disconnect(){console.log("🔌 Disconnecting wallet..."),this.isConnected=!1,this.isPremium=!1,this.walletAddress="",d.isConnected=!1,d.isPremium=!1,d.walletAddress="",localStorage.removeItem("walletConnected"),localStorage.removeItem("walletAddress"),localStorage.removeItem("walletPremium"),localStorage.removeItem("walletProvider"),this.updateSidebar(),d.currentPage!=="dashboard"&&d.currentPage!=="metrics"&&p.redirect("/dashboard"),console.log("✅ Wallet disconnected successfully")}async verifyImgTokens(t){console.log("🔍 Verifying token balance for:",t);try{console.log("🔄 Checking balance via Render backend...");const a=await this.checkRenderBackend(t);return console.log(`✅ Token verification successful! Balance: ${a}`),a}catch(a){return console.error("❌ Render backend verification failed:",a.message),["8564VyMMrMQyFbJrLGLCvDhFBuHYwxysdXgX7zFC7oue"].includes(t)?(47500):(console.log("❌ Token verification failed, denying premium access"),0)}}async checkRenderBackend(t){console.log("🔄 Trying Render backend verification...");const a=await fetch("https://img-protocol-backend.onrender.com/api/check-img-tokens",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({walletAddress:t}),timeout:1e4});if(!a.ok)throw new Error(`Render backend error: ${a.status} ${a.statusText}`);const i=await a.json();return console.log("✅ Render backend verification successful:",i),i.imgTokenBalance||0}showConnectingStatus(){const t=document.getElementById("wallet-connection-status");t&&(t.style.display="block",t.innerHTML=`
                 <div class="connection-indicator">
                     <div class="loading-spinner"></div>
@@ -2949,10 +2949,10 @@ function setupVotingEventListeners() {
         
         /* Ultra-Compact Poll Results Styling */
         .poll-results-compact {
-            margin-top: 4px;
-            padding: 10px;
+            margin-top: 1px;
+            padding: 4px;
             background: rgba(31, 41, 55, 0.4);
-            border-radius: 6px;
+            border-radius: 4px;
             border: 1px solid rgba(16, 185, 129, 0.2);
         }
         .results-header {
@@ -2973,40 +2973,46 @@ function setupVotingEventListeners() {
             font-weight: 500;
         }
         .results-list {
-            margin-bottom: 8px;
+            margin-bottom: 2px;
         }
         .result-row {
             display: flex;
-            align-items: center;
-            margin-bottom: 4px;
-            padding: 2px 0;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 1px;
+            padding: 0;
         }
         .result-row.selected .result-label {
             color: #10b981;
             font-weight: 600;
         }
         .result-label {
-            min-width: 70px;
             color: #f8fafc;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
-            margin-right: 8px;
+            margin-bottom: 1px;
+            line-height: 1.1;
         }
-        .result-percentage {
-            min-width: 50px;
-            color: #f8fafc;
-            font-size: 13px;
-            font-weight: 500;
-            margin-left: 8px;
-            text-align: right;
+        .result-bar-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
         }
         .result-bar {
             flex: 1;
-            height: 12px;
+            height: 10px;
             background: rgba(55, 65, 81, 0.6);
-            border-radius: 6px;
+            border-radius: 5px;
             overflow: hidden;
             position: relative;
+            margin-right: 6px;
+        }
+        .result-percentage {
+            min-width: 40px;
+            color: #f8fafc;
+            font-size: 11px;
+            font-weight: 500;
+            text-align: right;
         }
         .result-fill {
             height: 100%;
@@ -3027,7 +3033,7 @@ function setupVotingEventListeners() {
         }
         .results-footer {
             text-align: center;
-            padding-top: 4px;
+            padding-top: 1px;
             border-top: 1px solid rgba(16, 185, 129, 0.1);
         }
         .view-results-link {
@@ -3336,10 +3342,12 @@ function createResultsHTML(pollId, results) {
         resultRowsHTML += `
             <div class="result-row">
                 <span class="result-label">${displayName}</span>
-                <div class="result-bar">
-                    <div class="result-fill ${fillClass}" style="width: ${percentage}%"></div>
+                <div class="result-bar-container">
+                    <div class="result-bar">
+                        <div class="result-fill ${fillClass}" style="width: ${percentage}%"></div>
+                    </div>
+                    <span class="result-percentage">${percentage}%</span>
                 </div>
-                <span class="result-percentage">${percentage}%</span>
             </div>
         `;
     });
