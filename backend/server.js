@@ -25,9 +25,10 @@ app.use(express.json());
 
 // Solana connection (using multiple RPC endpoints for better reliability)
 const rpcEndpoints = [
+    'https://rpc.ankr.com/solana',
     'https://api.mainnet-beta.solana.com',
     'https://solana-api.projectserum.com',
-    'https://rpc.ankr.com/solana'
+    'https://solana-mainnet.g.alchemy.com/v2/demo'
 ];
 
 let currentRpcIndex = 0;
@@ -159,8 +160,71 @@ app.get('/health', (req, res) => {
     res.json({ status: 'OK', message: 'IMG Protocol Backend is running' });
 });
 
-// Check IMG tokens endpoint
-app.post('/api/check-img-tokens', async (req, res) => {
+// Request cache to reduce API calls
+const requestCache = new Map();
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+// Rate limiting for API calls
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
+const MAX_REQUESTS_PER_WINDOW = 10; // Max 10 requests per minute per IP
+
+// Rate limiting middleware
+function rateLimitMiddleware(req, res, next) {
+    const clientIP = req.ip || req.connection.remoteAddress;
+    const now = Date.now();
+    
+    if (!rateLimitMap.has(clientIP)) {
+        rateLimitMap.set(clientIP, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+        return next();
+    }
+    
+    const rateLimitData = rateLimitMap.get(clientIP);
+    
+    if (now > rateLimitData.resetTime) {
+        rateLimitData.count = 1;
+        rateLimitData.resetTime = now + RATE_LIMIT_WINDOW;
+        return next();
+    }
+    
+    if (rateLimitData.count >= MAX_REQUESTS_PER_WINDOW) {
+        return res.status(429).json({
+            error: 'Rate limit exceeded',
+            message: `Too many requests. Maximum ${MAX_REQUESTS_PER_WINDOW} requests per minute allowed.`,
+            retryAfter: Math.ceil((rateLimitData.resetTime - now) / 1000)
+        });
+    }
+    
+    rateLimitData.count++;
+    next();
+}
+
+// Retry function with exponential backoff
+async function retryWithBackoff(fn, maxRetries = 5, baseDelay = 500) {
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+        try {
+            return await fn();
+        } catch (error) {
+            if (error.message.includes('429') || error.message.includes('Too many requests')) {
+                if (attempt === maxRetries - 1) {
+                    throw error;
+                }
+                
+                const delay = baseDelay * Math.pow(2, attempt);
+                console.log(`Server responded with 429 Too Many Requests.  Retrying after ${delay}ms delay...`);
+                await new Promise(resolve => setTimeout(resolve, delay));
+                
+                // Switch RPC endpoint on rate limit
+                connection = switchRpcEndpoint();
+                continue;
+            }
+            throw error;
+        }
+    }
+}
+
+// Check IMG tokens endpoint with improved rate limiting
+app.post('/api/check-img-tokens', rateLimitMiddleware, async (req, res) => {
     try {
         const { walletAddress } = req.body;
         
@@ -168,6 +232,14 @@ app.post('/api/check-img-tokens', async (req, res) => {
             return res.status(400).json({ 
                 error: 'Wallet address is required' 
             });
+        }
+
+        // Check cache first
+        const cacheKey = `img_tokens_${walletAddress}`;
+        const cached = requestCache.get(cacheKey);
+        if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+            console.log(`📋 Using cached result for wallet: ${walletAddress}`);
+            return res.json(cached.data);
         }
 
         console.log(`🔍 Checking IMG tokens for wallet: ${walletAddress}`);
@@ -182,11 +254,13 @@ app.post('/api/check-img-tokens', async (req, res) => {
             });
         }
 
-        // Get token accounts for the wallet
-        const tokenAccounts = await connection.getParsedTokenAccountsByOwner(
-            publicKey,
-            { mint: new PublicKey(IMG_TOKEN_MINT) }
-        );
+        // Get token accounts with retry logic
+        const tokenAccounts = await retryWithBackoff(async () => {
+            return await connection.getParsedTokenAccountsByOwner(
+                publicKey,
+                { mint: new PublicKey(IMG_TOKEN_MINT) }
+            );
+        });
 
         // Calculate total IMG token balance
         let totalBalance = 0;
@@ -212,8 +286,8 @@ app.post('/api/check-img-tokens', async (req, res) => {
         console.log(`💰 Wallet ${walletAddress}: ${totalBalance.toLocaleString()} IMG tokens`);
         console.log(`🔒 Premium access: ${isPremium ? 'GRANTED' : 'DENIED'}`);
 
-        // Return result
-        res.json({
+        // Prepare response data
+        const responseData = {
             success: true,
             walletAddress: walletAddress,
             imgTokenBalance: totalBalance,
@@ -224,14 +298,43 @@ app.post('/api/check-img-tokens', async (req, res) => {
             message: hasEnoughTokens 
                 ? `Premium access granted! You have ${totalBalance.toLocaleString()} IMG tokens`
                 : `Premium access denied. You need ${REQUIRED_IMG_AMOUNT.toLocaleString()} IMG tokens, but have ${totalBalance.toLocaleString()}`
+        };
+
+        // Cache the result
+        requestCache.set(cacheKey, {
+            data: responseData,
+            timestamp: Date.now()
         });
+
+        // Clean old cache entries
+        if (requestCache.size > 100) {
+            const now = Date.now();
+            for (const [key, value] of requestCache.entries()) {
+                if (now - value.timestamp > CACHE_DURATION) {
+                    requestCache.delete(key);
+                }
+            }
+        }
+
+        // Return result
+        res.json(responseData);
 
     } catch (error) {
         console.error('❌ Error checking IMG tokens:', error);
-        res.status(500).json({ 
-            error: 'Failed to check IMG tokens',
-            message: error.message 
-        });
+        
+        // Return more specific error information
+        if (error.message.includes('429') || error.message.includes('Too many requests')) {
+            res.status(429).json({ 
+                error: 'Rate limit exceeded',
+                message: 'Too many requests to Solana RPC. Please try again in a few minutes.',
+                retryAfter: 60 // seconds
+            });
+        } else {
+            res.status(500).json({ 
+                error: 'Failed to check IMG tokens',
+                message: error.message 
+            });
+        }
     }
 });
 
