@@ -25,10 +25,9 @@ app.use(express.json());
 
 // Solana connection (using multiple RPC endpoints for better reliability)
 const rpcEndpoints = [
-    'https://rpc.ankr.com/solana',
     'https://api.mainnet-beta.solana.com',
     'https://solana-api.projectserum.com',
-    'https://solana-mainnet.g.alchemy.com/v2/demo'
+    'https://rpc.ankr.com/solana'
 ];
 
 let currentRpcIndex = 0;
@@ -217,6 +216,18 @@ async function retryWithBackoff(fn, maxRetries = 5, baseDelay = 500) {
                 // Switch RPC endpoint on rate limit
                 connection = switchRpcEndpoint();
                 continue;
+            } else if (error.message.includes('403') || error.message.includes('Forbidden') || error.message.includes('API key')) {
+                if (attempt === maxRetries - 1) {
+                    throw error;
+                }
+                
+                const delay = baseDelay * Math.pow(2, attempt);
+                console.log(`Server responded with 403 Forbidden (API key issue).  Retrying after ${delay}ms delay...`);
+                await new Promise(resolve => setTimeout(resolve, delay));
+                
+                // Switch RPC endpoint on API key error
+                connection = switchRpcEndpoint();
+                continue;
             }
             throw error;
         }
@@ -328,6 +339,12 @@ app.post('/api/check-img-tokens', rateLimitMiddleware, async (req, res) => {
                 error: 'Rate limit exceeded',
                 message: 'Too many requests to Solana RPC. Please try again in a few minutes.',
                 retryAfter: 60 // seconds
+            });
+        } else if (error.message.includes('403') || error.message.includes('Forbidden') || error.message.includes('API key')) {
+            res.status(503).json({ 
+                error: 'RPC endpoint unavailable',
+                message: 'Solana RPC endpoint is temporarily unavailable. Please try again in a few minutes.',
+                retryAfter: 30 // seconds
             });
         } else {
             res.status(500).json({ 
