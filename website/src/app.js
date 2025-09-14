@@ -1589,17 +1589,16 @@
                             <div class="cell pool-cell" id="year3-pool">US$2,737,500.00</div>
                             <div class="cell wallet-cell" id="year3-wallet">US$136,875.00</div>
                 </div>
-            </div>
+                </div>
                     </div>
                 </div>
                 
+                <!-- Footer -->
+                <div class="rewards-footer">
+                    <p>Real-time data from DexScreener • SOL: US$241.41 • IMG Supply: 998,948,765</p>
+                </div>
+                
         </div>
-        
-        <!-- Footer -->
-        <div class="rewards-footer">
-            <p>Real-time data from DexScreener • SOL: US$241.41 • IMG Supply: 998,948,765</p>
-                        </div>
-                    </div>
 `,Te=()=>`
     <!-- Mobile Header -->
     <div class="mobile-header">
