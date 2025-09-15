@@ -43,8 +43,8 @@
 
                     <div class="tab-item ${e.currentPage==="wallet-lookup"?"active":""}" data-page="wallet-lookup">
                         <a href="/wallet-lookup" class="tab-link premium-tab">
-                            <img src="/wallet.png" alt="" class="tab-icon">
-                            <span class="tab-label">Wallet Lookup</span>
+                            <img src="/pools.png" alt="" class="tab-icon">
+                            <span class="tab-label">Pools</span>
                             <span class="premium-badge">Premium</span>
                         </a>
                     </div>
@@ -83,8 +83,8 @@
 
                     <div class="tab-item locked" data-page="wallet-lookup">
                         <div class="tab-link locked-tab">
-                            <img src="/wallet.png" alt="" class="tab-icon locked-icon">
-                            <span class="tab-label">Wallet Lookup</span>
+                            <img src="/pools.png" alt="" class="tab-icon locked-icon">
+                            <span class="tab-label">Pools</span>
                             <img src="/shield.png" alt="Locked" class="lock-badge shield-icon">
                         </div>
                     </div>
@@ -1402,7 +1402,7 @@
     
     <div class="wallet-lookup-page">
         <div class="page-header">
-            <h1>Wallet Lookup</h1>
+            <h1>Pools</h1>
             <p>Search and analyze wallet addresses</p>
         </div>
         
