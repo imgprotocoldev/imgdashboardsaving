@@ -1474,13 +1474,13 @@
                 <div class="earnings-section short-term">
                     <div class="earnings-item highlight">
                         <div class="earnings-label">Daily Earnings</div>
-                        <div class="earnings-value" id="daily-earnings">$2.50258</div>
-                        <div class="earnings-sol" id="daily-earnings-sol">0.010367 SOL</div>
+                        <div class="earnings-value" id="daily-earnings">$4.50</div>
+                        <div class="earnings-sol" id="daily-earnings-sol">0.0187 SOL</div>
                     </div>
                     <div class="earnings-item">
                         <div class="earnings-label">Weekly Earnings</div>
-                        <div class="earnings-value" id="weekly-earnings">$17.52</div>
-                        <div class="earnings-sol" id="weekly-earnings-sol">0.072569 SOL</div>
+                        <div class="earnings-value" id="weekly-earnings">$31.50</div>
+                        <div class="earnings-sol" id="weekly-earnings-sol">0.1309 SOL</div>
                     </div>
             </div>
             
@@ -1488,13 +1488,13 @@
                 <div class="earnings-section long-term">
                     <div class="earnings-item">
                         <div class="earnings-label">Monthly Projection</div>
-                        <div class="earnings-value" id="monthly-projection">$76.12</div>
-                        <div class="earnings-sol" id="monthly-projection-sol">0.315315 SOL</div>
+                        <div class="earnings-value" id="monthly-projection">$137.02</div>
+                        <div class="earnings-sol" id="monthly-projection-sol">0.5808 SOL</div>
             </div>
                     <div class="earnings-item">
                         <div class="earnings-label">Annual Projection</div>
-                        <div class="earnings-value" id="annual-projection">$913.44</div>
-                        <div class="earnings-sol" id="annual-projection-sol">3.783778 SOL</div>
+                        <div class="earnings-value" id="annual-projection">$1,644.20</div>
+                        <div class="earnings-sol" id="annual-projection-sol">6.9699 SOL</div>
         </div>
     </div>
                 </div>
@@ -1505,13 +1505,13 @@
                         <div class="stat-card">
                           <div class="stat-content">
                                 <div class="stat-label">Rewards Pool</div>
-                                <div class="stat-value" id="rewards-pool">US$2,500.00</div>
+                                <div class="stat-value" id="rewards-pool">$4,500.00</div>
             </div>
             </div>
                         <div class="stat-card">
                             <div class="stat-content">
                                 <div class="stat-label">InfraWallet</div>
-                                <div class="stat-value" id="infra-wallet">US$125.00</div>
+                                <div class="stat-value" id="infra-wallet">$500.00</div>
         </div>
     </div>
             </div>
@@ -1599,7 +1599,7 @@
                 
                 <!-- Footer -->
                 <div class="rewards-footer">
-                    <p>All monetary values are calculated in US Dollars (USD) • Real-time data from DexScreener • SOL: US$241.41 • IMG Supply: 998,948,765</p>
+                    <p>All monetary values are calculated in US Dollars (USD) • Real-time data from DexScreener & CoinGecko • SOL: <span id="sol-price">$235.90</span> • IMG Supply: 998,968,783</p>
                     </div>
                     
                         </div>
@@ -4021,7 +4021,7 @@ function handleInputFormatting(event) {
     input.setSelectionRange(newCursorPosition, newCursorPosition);
     
     // Trigger calculation
-    calculateRewards();
+    calculateRewards().catch(console.error);
 }
 
 // Initialize Rewards Calculator
@@ -4041,7 +4041,7 @@ function initializeRewardsCalculator() {
         holdingsInput.addEventListener('input', handleInputFormatting);
         
         // Initial calculation
-        calculateRewards();
+        calculateRewards().catch(console.error);
     }
 }
 
@@ -4128,32 +4128,57 @@ function updateStatElement(id, value) {
     }
 }
 
+// Fetch SOL price from CoinGecko API
+async function fetchSOLPrice() {
+    try {
+        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
+        const data = await response.json();
+        return data.solana.usd;
+    } catch (error) {
+        console.error('Error fetching SOL price:', error);
+        return 235.90; // fallback price
+    }
+}
+
 // Calculate rewards based on inputs
-function calculateRewards() {
+async function calculateRewards() {
     const volume = parseFloat(document.getElementById('volume-24h')?.value?.replace(/,/g, '') || 100000);
     const holdings = parseFloat(document.getElementById('img-holdings')?.value?.replace(/,/g, '') || 1000000);
     
-    // Basic reward calculations (these would be more complex in reality)
-    const totalRewardsPool = volume * 0.025; // 2.5% of volume
-    const infraWallet = totalRewardsPool * 0.05; // 5% to infra wallet
-    const dailyEarnings = (totalRewardsPool - infraWallet) * (holdings / 1000000000); // Based on holdings proportion
+    // IMG Tokenomics: 5% tax on all transactions
+    // 4.5% goes to holders (90% of tax), 0.5% goes to infrastructure wallet (10% of tax)
+    const totalTax = volume * 0.05; // 5% tax on volume
+    const rewardsPool = totalTax * 0.9; // 90% of tax goes to holders (4.5%)
+    const infraWallet = totalTax * 0.1; // 10% of tax goes to infrastructure (0.5%)
     
-    // SOL price (this would come from API in real implementation)
-    const solPrice = 241.41;
+    // Calculate user's proportional share based on their IMG holdings
+    // Total IMG supply: 998,968,783 (matching original website)
+    const totalSupply = 998968783;
+    const userShare = holdings / totalSupply;
+    const dailyEarnings = rewardsPool * userShare;
     
-    // Update earnings display boxes
-    updateStatElement('daily-earnings', `$${dailyEarnings.toFixed(5)}`);
-    updateStatElement('daily-earnings-sol', `${(dailyEarnings / solPrice).toFixed(6)} SOL`);
-    updateStatElement('weekly-earnings', `$${(dailyEarnings * 7).toFixed(2)}`);
-    updateStatElement('weekly-earnings-sol', `${((dailyEarnings * 7) / solPrice).toFixed(6)} SOL`);
-    updateStatElement('monthly-projection', `$${(dailyEarnings * 30.44).toFixed(2)}`);
-    updateStatElement('monthly-projection-sol', `${((dailyEarnings * 30.44) / solPrice).toFixed(6)} SOL`);
-    updateStatElement('annual-projection', `$${(dailyEarnings * 365).toFixed(2)}`);
-    updateStatElement('annual-projection-sol', `${((dailyEarnings * 365) / solPrice).toFixed(6)} SOL`);
+    // Use more precise calculation to match dashboard exactly
+    const preciseDailyEarnings = (volume * 0.05 * 0.9 * holdings) / totalSupply;
+    
+    // Fetch SOL price from CoinGecko API
+    const solPrice = await fetchSOLPrice();
+    
+    // Update SOL price display in footer
+    updateStatElement('sol-price', `$${solPrice.toFixed(2)}`);
+    
+    // Update earnings display boxes using precise calculation
+    updateStatElement('daily-earnings', `$${preciseDailyEarnings.toFixed(5)}`);
+    updateStatElement('daily-earnings-sol', `${(preciseDailyEarnings / solPrice).toFixed(6)} SOL`);
+    updateStatElement('weekly-earnings', `$${(preciseDailyEarnings * 7).toFixed(2)}`);
+    updateStatElement('weekly-earnings-sol', `${((preciseDailyEarnings * 7) / solPrice).toFixed(6)} SOL`);
+    updateStatElement('monthly-projection', `$${(preciseDailyEarnings * 30.4167).toFixed(2)}`);
+    updateStatElement('monthly-projection-sol', `${((preciseDailyEarnings * 30.4167) / solPrice).toFixed(6)} SOL`);
+    updateStatElement('annual-projection', `$${(preciseDailyEarnings * 365).toFixed(2)}`);
+    updateStatElement('annual-projection-sol', `${((preciseDailyEarnings * 365) / solPrice).toFixed(6)} SOL`);
     
     // Update pool stats
-    updateStatElement('rewards-pool', `US$${totalRewardsPool.toFixed(2)}`);
-    updateStatElement('infra-wallet', `US$${infraWallet.toFixed(2)}`);
+    updateStatElement('rewards-pool', `$${rewardsPool.toFixed(2)}`);
+    updateStatElement('infra-wallet', `$${infraWallet.toFixed(2)}`);
     
     // Calculate projections for all time periods
     const projections = [
@@ -4166,10 +4191,11 @@ function calculateRewards() {
     ];
     
     projections.forEach(proj => {
-        // Volume and holdings stay the same, only earnings are calculated based on time period
-        const projectedPool = volume * 0.025 * proj.volumeMult; // Pool scales with time
-        const projectedWallet = projectedPool * 0.05;
-        const projectedEarnings = (projectedPool - projectedWallet) * (holdings / 1000000000);
+        // Apply IMG tokenomics: 5% tax on volume, 90% to holders, 10% to infrastructure
+        const projectedTax = volume * 0.05 * proj.volumeMult; // 5% tax scales with time
+        const projectedPool = projectedTax * 0.9; // 90% of tax goes to holders
+        const projectedWallet = projectedTax * 0.1; // 10% of tax goes to infrastructure
+        const projectedEarnings = (volume * 0.05 * 0.9 * holdings * proj.volumeMult) / totalSupply; // Precise calculation
         
         // Update spreadsheet values
         updateStatElement(`${proj.period}-volume`, `$${formatNumber(volume)}`);
