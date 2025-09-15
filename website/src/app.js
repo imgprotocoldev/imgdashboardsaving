@@ -1474,12 +1474,12 @@
                 <div class="earnings-section short-term">
                     <div class="earnings-item highlight">
                         <div class="earnings-label">Daily Earnings</div>
-                        <div class="earnings-value" id="daily-earnings">US$2.50258</div>
+                        <div class="earnings-value" id="daily-earnings">$2.50258</div>
                         <div class="earnings-sol" id="daily-earnings-sol">0.010367 SOL</div>
                     </div>
                     <div class="earnings-item">
                         <div class="earnings-label">Weekly Earnings</div>
-                        <div class="earnings-value" id="weekly-earnings">US$17.52</div>
+                        <div class="earnings-value" id="weekly-earnings">$17.52</div>
                         <div class="earnings-sol" id="weekly-earnings-sol">0.072569 SOL</div>
                     </div>
             </div>
@@ -1488,12 +1488,12 @@
                 <div class="earnings-section long-term">
                     <div class="earnings-item">
                         <div class="earnings-label">Monthly Projection</div>
-                        <div class="earnings-value" id="monthly-projection">US$76.12</div>
+                        <div class="earnings-value" id="monthly-projection">$76.12</div>
                         <div class="earnings-sol" id="monthly-projection-sol">0.315315 SOL</div>
             </div>
                     <div class="earnings-item">
                         <div class="earnings-label">Annual Projection</div>
-                        <div class="earnings-value" id="annual-projection">US$913.44</div>
+                        <div class="earnings-value" id="annual-projection">$913.44</div>
                         <div class="earnings-sol" id="annual-projection-sol">3.783778 SOL</div>
         </div>
     </div>
@@ -1525,11 +1525,11 @@
                 <div class="spreadsheet-container">
                     <div class="spreadsheet-table">
                         <div class="table-header">
-                            <div class="header-cell">Earnings Type</div>
+                            <div class="header-cell">Type</div>
                             <div class="header-cell">24H Volume</div>
                             <div class="header-cell">IMG Holdings</div>
-                            <div class="header-cell">Total Earnings</div>
-                            <div class="header-cell">SOL Equivalent</div>
+                            <div class="header-cell">Earnings</div>
+                            <div class="header-cell">Earnings (SOL)</div>
                             <div class="header-cell">Rewards Pool</div>
                             <div class="header-cell">InfraWallet</div>
                         </div>
@@ -1538,60 +1538,60 @@
                             <div class="cell type-cell">Daily</div>
                             <div class="cell volume-cell" id="daily-volume">$100,000</div>
                             <div class="cell holdings-cell" id="daily-holdings">1,000,000 IMG</div>
-                            <div class="cell earnings-cell highlight" id="daily-total">US$2.50</div>
+                            <div class="cell earnings-cell highlight" id="daily-total">$2.50</div>
                             <div class="cell sol-cell" id="daily-sol">0.010367 SOL</div>
-                            <div class="cell pool-cell" id="daily-pool">US$2,500.00</div>
-                            <div class="cell wallet-cell" id="daily-wallet">US$125.00</div>
+                            <div class="cell pool-cell" id="daily-pool">$2,500.00</div>
+                            <div class="cell wallet-cell" id="daily-wallet">$125.00</div>
                     </div>
                     
                         <div class="table-row">
                             <div class="cell type-cell">Weekly</div>
                             <div class="cell volume-cell" id="weekly-volume">$700,000</div>
                             <div class="cell holdings-cell" id="weekly-holdings">1,000,000 IMG</div>
-                            <div class="cell earnings-cell" id="weekly-total">US$17.52</div>
+                            <div class="cell earnings-cell" id="weekly-total">$17.52</div>
                             <div class="cell sol-cell" id="weekly-sol">0.072569 SOL</div>
-                            <div class="cell pool-cell" id="weekly-pool">US$17,500.00</div>
-                            <div class="cell wallet-cell" id="weekly-wallet">US$875.00</div>
+                            <div class="cell pool-cell" id="weekly-pool">$17,500.00</div>
+                            <div class="cell wallet-cell" id="weekly-wallet">$875.00</div>
                         </div>
 
                         <div class="table-row">
                             <div class="cell type-cell">Monthly</div>
                             <div class="cell volume-cell" id="monthly-volume">$3,000,000</div>
                             <div class="cell holdings-cell" id="monthly-holdings">1,000,000 IMG</div>
-                            <div class="cell earnings-cell" id="monthly-total">US$76.12</div>
+                            <div class="cell earnings-cell" id="monthly-total">$76.12</div>
                             <div class="cell sol-cell" id="monthly-sol">0.315315 SOL</div>
-                            <div class="cell pool-cell" id="monthly-pool">US$75,000.00</div>
-                            <div class="cell wallet-cell" id="monthly-wallet">US$3,750.00</div>
+                            <div class="cell pool-cell" id="monthly-pool">$75,000.00</div>
+                            <div class="cell wallet-cell" id="monthly-wallet">$3,750.00</div>
                     </div>
                     
                         <div class="table-row">
                             <div class="cell type-cell">Annual</div>
                             <div class="cell volume-cell" id="annual-volume">$36,500,000</div>
                             <div class="cell holdings-cell" id="annual-holdings">1,000,000 IMG</div>
-                            <div class="cell earnings-cell" id="annual-total">US$913.44</div>
+                            <div class="cell earnings-cell" id="annual-total">$913.44</div>
                             <div class="cell sol-cell" id="annual-sol">3.783778 SOL</div>
-                            <div class="cell pool-cell" id="annual-pool">US$912,500.00</div>
-                            <div class="cell wallet-cell" id="annual-wallet">US$45,625.00</div>
+                            <div class="cell pool-cell" id="annual-pool">$912,500.00</div>
+                            <div class="cell wallet-cell" id="annual-wallet">$45,625.00</div>
                         </div>
                 
                         <div class="table-row">
                             <div class="cell type-cell">2 Years</div>
                             <div class="cell volume-cell" id="year2-volume">$73,000,000</div>
                             <div class="cell holdings-cell" id="year2-holdings">1,000,000 IMG</div>
-                            <div class="cell earnings-cell" id="year2-total">US$1,826.88</div>
+                            <div class="cell earnings-cell" id="year2-total">$1,826.88</div>
                             <div class="cell sol-cell" id="year2-sol">7.567556 SOL</div>
-                            <div class="cell pool-cell" id="year2-pool">US$1,825,000.00</div>
-                            <div class="cell wallet-cell" id="year2-wallet">US$91,250.00</div>
+                            <div class="cell pool-cell" id="year2-pool">$1,825,000.00</div>
+                            <div class="cell wallet-cell" id="year2-wallet">$91,250.00</div>
                 </div>
                 
                         <div class="table-row">
                             <div class="cell type-cell">3 Years</div>
                             <div class="cell volume-cell" id="year3-volume">$109,500,000</div>
                             <div class="cell holdings-cell" id="year3-holdings">1,000,000 IMG</div>
-                            <div class="cell earnings-cell" id="year3-total">US$2,740.32</div>
+                            <div class="cell earnings-cell" id="year3-total">$2,740.32</div>
                             <div class="cell sol-cell" id="year3-sol">11.351334 SOL</div>
-                            <div class="cell pool-cell" id="year3-pool">US$2,737,500.00</div>
-                            <div class="cell wallet-cell" id="year3-wallet">US$136,875.00</div>
+                            <div class="cell pool-cell" id="year3-pool">$2,737,500.00</div>
+                            <div class="cell wallet-cell" id="year3-wallet">$136,875.00</div>
                 </div>
             </div>
                     </div>
@@ -1599,7 +1599,7 @@
                 
                 <!-- Footer -->
                 <div class="rewards-footer">
-                    <p>Real-time data from DexScreener • SOL: US$241.41 • IMG Supply: 998,948,765</p>
+                    <p>All monetary values are calculated in US Dollars (USD) • Real-time data from DexScreener • SOL: US$241.41 • IMG Supply: 998,948,765</p>
                     </div>
                     
                         </div>
@@ -4142,13 +4142,13 @@ function calculateRewards() {
     const solPrice = 241.41;
     
     // Update earnings display boxes
-    updateStatElement('daily-earnings', `US$${dailyEarnings.toFixed(5)}`);
+    updateStatElement('daily-earnings', `$${dailyEarnings.toFixed(5)}`);
     updateStatElement('daily-earnings-sol', `${(dailyEarnings / solPrice).toFixed(6)} SOL`);
-    updateStatElement('weekly-earnings', `US$${(dailyEarnings * 7).toFixed(2)}`);
+    updateStatElement('weekly-earnings', `$${(dailyEarnings * 7).toFixed(2)}`);
     updateStatElement('weekly-earnings-sol', `${((dailyEarnings * 7) / solPrice).toFixed(6)} SOL`);
-    updateStatElement('monthly-projection', `US$${(dailyEarnings * 30.44).toFixed(2)}`);
+    updateStatElement('monthly-projection', `$${(dailyEarnings * 30.44).toFixed(2)}`);
     updateStatElement('monthly-projection-sol', `${((dailyEarnings * 30.44) / solPrice).toFixed(6)} SOL`);
-    updateStatElement('annual-projection', `US$${(dailyEarnings * 365).toFixed(2)}`);
+    updateStatElement('annual-projection', `$${(dailyEarnings * 365).toFixed(2)}`);
     updateStatElement('annual-projection-sol', `${((dailyEarnings * 365) / solPrice).toFixed(6)} SOL`);
     
     // Update pool stats
@@ -4174,9 +4174,9 @@ function calculateRewards() {
         // Update spreadsheet values
         updateStatElement(`${proj.period}-volume`, `$${formatNumber(volume)}`);
         updateStatElement(`${proj.period}-holdings`, `${formatNumber(holdings)} IMG`);
-        updateStatElement(`${proj.period}-pool`, `US$${formatNumber(projectedPool)}`);
-        updateStatElement(`${proj.period}-wallet`, `US$${formatNumber(projectedWallet)}`);
-        updateStatElement(`${proj.period}-total`, `US$${formatNumber(projectedEarnings)}`);
+        updateStatElement(`${proj.period}-pool`, `$${formatNumber(projectedPool)}`);
+        updateStatElement(`${proj.period}-wallet`, `$${formatNumber(projectedWallet)}`);
+        updateStatElement(`${proj.period}-total`, `$${formatNumber(projectedEarnings)}`);
         updateStatElement(`${proj.period}-sol`, `${(projectedEarnings / solPrice).toFixed(6)} SOL`);
     });
 }
