@@ -1458,7 +1458,7 @@
                             <div class="input-wrapper">
                                 <input type="text" id="volume-24h" placeholder="100,000" value="100,000">
                                 <span class="input-unit">USD</span>
-                            </div>
+                </div>
                         </div>
                         <div class="input-field">
                             <label>Your IMG Holdings</label>
@@ -1469,7 +1469,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <!-- Column 2: Short-term Earnings -->
                 <div class="earnings-section short-term">
                     <div class="earnings-item highlight">
@@ -1482,22 +1482,22 @@
                         <div class="earnings-value" id="weekly-earnings">US$17.52</div>
                         <div class="earnings-sol" id="weekly-earnings-sol">0.072569 SOL</div>
                     </div>
-                </div>
-
+            </div>
+            
                 <!-- Column 3: Long-term Projections -->
                 <div class="earnings-section long-term">
                     <div class="earnings-item">
                         <div class="earnings-label">Monthly Projection</div>
                         <div class="earnings-value" id="monthly-projection">US$76.12</div>
                         <div class="earnings-sol" id="monthly-projection-sol">0.315315 SOL</div>
-                    </div>
+            </div>
                     <div class="earnings-item">
                         <div class="earnings-label">Annual Projection</div>
                         <div class="earnings-value" id="annual-projection">US$913.44</div>
                         <div class="earnings-sol" id="annual-projection-sol">3.783778 SOL</div>
-                    </div>
+        </div>
+    </div>
                 </div>
-            </div>
                 
                 <!-- Pool Stats Section -->
                 <div class="pool-stats-section">
@@ -1506,18 +1506,18 @@
                           <div class="stat-content">
                                 <div class="stat-label">Rewards Pool</div>
                                 <div class="stat-value" id="rewards-pool">US$2,500.00</div>
-                </div>
+            </div>
             </div>
                         <div class="stat-card">
                             <div class="stat-content">
                                 <div class="stat-label">InfraWallet</div>
                                 <div class="stat-value" id="infra-wallet">US$125.00</div>
-            </div>
-        </div>
-            </div>
         </div>
     </div>
-    
+            </div>
+                    </div>
+                </div>
+                
                 
             <!-- Comprehensive Projection Spreadsheet -->
             <div class="projection-spreadsheet">
@@ -1593,16 +1593,16 @@
                             <div class="cell pool-cell" id="year3-pool">US$2,737,500.00</div>
                             <div class="cell wallet-cell" id="year3-wallet">US$136,875.00</div>
                 </div>
-                </div>
+            </div>
                     </div>
                 </div>
                 
                 <!-- Footer -->
                 <div class="rewards-footer">
                     <p>Real-time data from DexScreener • SOL: US$241.41 • IMG Supply: 998,948,765</p>
-                </div>
-                
-        </div>
+                    </div>
+                    
+                        </div>
 `,Te=()=>`
     <!-- Mobile Header -->
     <div class="mobile-header">
@@ -1611,8 +1611,8 @@
                 <div class="mobile-brand-text">IMG FINANCE</div>
                 <div class="mobile-logo">
                     <img src="/imgtextlogo.webp" alt="IMG Finance Logo">
-                        </div>
                     </div>
+                        </div>
             <div class="mobile-header-right">
                 <button class="burger-menu-btn" id="mobile-menu-btn">
                     <div class="burger-line"></div>
