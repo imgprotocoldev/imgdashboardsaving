@@ -4207,6 +4207,128 @@ async function fetchSOLPrice() {
     }
 }
 
+// Fetch IMG token pools data from CoinGecko API
+async function fetchIMGPoolsData() {
+    const API_KEY = 'CG-RxzMdLJouiZjJBrSzjwvRGsf';
+    const IMG_TOKEN_ADDRESS = 'znv3FZt2HFAvzYf5LxzVyryh3mBXWuTRRng25gEZAjh';
+    
+    try {
+        const response = await fetch(`https://api.coingecko.com/api/v3/onchain/networks/solana/tokens/${IMG_TOKEN_ADDRESS}/pools?include=top_pools`, {
+            headers: {
+                'Authorization': `Bearer ${API_KEY}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('CoinGecko pools data:', data);
+        return data;
+    } catch (error) {
+        console.error('Error fetching IMG pools data:', error);
+        return null;
+    }
+}
+
+// Process and display pools data
+async function loadPoolsData() {
+    console.log('Loading pools data...');
+    
+    const poolsData = await fetchIMGPoolsData();
+    if (!poolsData || !poolsData.data) {
+        console.error('Failed to fetch pools data');
+        return;
+    }
+    
+    const pools = poolsData.data;
+    console.log('Available pools:', pools);
+    
+    // Map pool data to our pool boxes
+    const poolMappings = {
+        'img-sol-raydium': { 
+            searchTerms: ['SOL', 'solana'], 
+            dex: 'raydium',
+            volumeElement: 'img-sol-volume',
+            changeElement: 'img-sol-change'
+        },
+        'img-bonk-raydium': { 
+            searchTerms: ['BONK', 'bonk'], 
+            dex: 'raydium',
+            volumeElement: 'img-bonk-raydium-volume',
+            changeElement: 'img-bonk-raydium-change'
+        },
+        'img-usdc-raydium': { 
+            searchTerms: ['USDC', 'usdc'], 
+            dex: 'raydium',
+            volumeElement: 'img-usdc-volume',
+            changeElement: 'img-usdc-change'
+        },
+        'img-bonk-orca': { 
+            searchTerms: ['BONK', 'bonk'], 
+            dex: 'orca',
+            volumeElement: 'img-bonk-orca-volume',
+            changeElement: 'img-bonk-orca-change'
+        }
+    };
+    
+    // Process each pool
+    Object.keys(poolMappings).forEach(poolKey => {
+        const mapping = poolMappings[poolKey];
+        const matchingPool = pools.find(pool => {
+            const poolName = pool.name?.toLowerCase() || '';
+            const dexName = pool.dex?.toLowerCase() || '';
+            
+            return mapping.searchTerms.some(term => 
+                poolName.includes(term.toLowerCase())
+            ) && dexName.includes(mapping.dex);
+        });
+        
+        if (matchingPool) {
+            console.log(`Found pool for ${poolKey}:`, matchingPool);
+            
+            // Update volume
+            const volumeElement = document.getElementById(mapping.volumeElement);
+            if (volumeElement) {
+                const volume = matchingPool.volume_usd || matchingPool.reserve_in_usd || 0;
+                volumeElement.textContent = formatVolume(volume);
+            }
+            
+            // Update change percentage
+            const changeElement = document.getElementById(mapping.changeElement);
+            if (changeElement) {
+                const change = matchingPool.price_change_percentage_24h || 0;
+                changeElement.textContent = `${change > 0 ? '+' : ''}${change.toFixed(2)}%`;
+                changeElement.className = `change-value ${change > 0 ? 'positive' : change < 0 ? 'negative' : 'neutral'}`;
+            }
+        } else {
+            console.log(`No matching pool found for ${poolKey}`);
+            // Set fallback values
+            const volumeElement = document.getElementById(mapping.volumeElement);
+            const changeElement = document.getElementById(mapping.changeElement);
+            
+            if (volumeElement) volumeElement.textContent = 'N/A';
+            if (changeElement) {
+                changeElement.textContent = 'N/A';
+                changeElement.className = 'change-value neutral';
+            }
+        }
+    });
+}
+
+// Format volume for display
+function formatVolume(volume) {
+    if (volume >= 1000000) {
+        return `$${(volume / 1000000).toFixed(2)}M`;
+    } else if (volume >= 1000) {
+        return `$${(volume / 1000).toFixed(2)}K`;
+    } else {
+        return `$${volume.toFixed(2)}`;
+    }
+}
+
 // Calculate rewards based on inputs
 async function calculateRewards() {
     const volume = parseFloat(document.getElementById('volume-24h')?.value?.replace(/,/g, '') || 100000);
