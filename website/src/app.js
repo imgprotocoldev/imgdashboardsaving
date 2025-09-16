@@ -1415,23 +1415,23 @@
                             <img src="/imglogo.png" alt="IMG" class="token-logo">
                             <span class="pair-separator">/</span>
                             <div class="token-placeholder sol">SOL</div>
-                        </div>
+            </div>
                         <div class="pool-exchange">
                             <div class="exchange-placeholder raydium">R</div>
                             <span class="exchange-name">Raydium</span>
-                        </div>
-                    </div>
+            </div>
+        </div>
                     <div class="pool-details">
                         <div class="pool-volume">
                             <span class="volume-label">24H Volume</span>
                             <span class="volume-value" id="img-sol-volume">Loading...</span>
-                        </div>
+    </div>
                         <div class="pool-change">
                             <span class="change-label">Volume %</span>
                             <span class="change-value" id="img-sol-change">Loading...</span>
-                        </div>
-                    </div>
                 </div>
+            </div>
+            </div>
 
                 <!-- IMG/BONK on Raydium -->
                 <div class="pool-box" data-pool="img-bonk-raydium">
@@ -1440,24 +1440,24 @@
                             <img src="/imglogo.png" alt="IMG" class="token-logo">
                             <span class="pair-separator">/</span>
                             <div class="token-placeholder bonk">BONK</div>
-                        </div>
+        </div>
                         <div class="pool-exchange">
                             <div class="exchange-placeholder raydium">R</div>
                             <span class="exchange-name">Raydium</span>
-                        </div>
-                    </div>
+    </div>
+        </div>
                     <div class="pool-details">
                         <div class="pool-volume">
                             <span class="volume-label">24H Volume</span>
                             <span class="volume-value" id="img-bonk-raydium-volume">Loading...</span>
-                        </div>
+                </div>
                         <div class="pool-change">
                             <span class="change-label">Volume %</span>
                             <span class="change-value" id="img-bonk-raydium-change">Loading...</span>
                         </div>
                     </div>
                 </div>
-
+                
                 <!-- IMG/USDC on Raydium -->
                 <div class="pool-box" data-pool="img-usdc-raydium">
                     <div class="pool-header">
@@ -1481,8 +1481,8 @@
                             <span class="change-value" id="img-usdc-change">Loading...</span>
                         </div>
                     </div>
-                </div>
-
+            </div>
+            
                 <!-- IMG/BONK on Orca -->
                 <div class="pool-box" data-pool="img-bonk-orca">
                     <div class="pool-header">
@@ -1490,12 +1490,12 @@
                             <img src="/imglogo.png" alt="IMG" class="token-logo">
                             <span class="pair-separator">/</span>
                             <div class="token-placeholder bonk">BONK</div>
-                        </div>
+            </div>
                         <div class="pool-exchange">
                             <div class="exchange-placeholder orca">O</div>
                             <span class="exchange-name">Orca</span>
-                        </div>
-                    </div>
+        </div>
+    </div>
                     <div class="pool-details">
                         <div class="pool-volume">
                             <span class="volume-label">24H Volume</span>
@@ -1539,8 +1539,8 @@
             <!-- Calculator Title -->
             <div class="calculator-title">
                 <h2>IMG REWARDS CALCULATOR</h2>
-        </div>
-        
+                </div>
+                
             <!-- Modern Calculator Controls - 3 Column Layout -->
             <div class="modern-calculator-controls">
                 <!-- Column 1: Input Section -->
@@ -1551,32 +1551,32 @@
                             <div class="input-wrapper">
                                 <input type="text" id="volume-24h" placeholder="100,000" value="100,000">
                                 <span class="input-unit">USD</span>
-                </div>
                         </div>
+                    </div>
                         <div class="input-field">
                             <label>Your IMG Holdings</label>
                             <div class="input-wrapper">
                                 <input type="text" id="img-holdings" placeholder="1,000,000" value="1,000,000">
                                 <span class="input-unit">IMG</span>
-                            </div>
+                        </div>
                         </div>
                     </div>
-                </div>
-                
+                    </div>
+                    
                 <!-- Column 2: Short-term Earnings -->
                 <div class="earnings-section short-term">
                     <div class="earnings-item highlight">
                         <div class="earnings-label">Daily Earnings</div>
                         <div class="earnings-value" id="daily-earnings">$4.50</div>
                         <div class="earnings-sol" id="daily-earnings-sol">0.0187 SOL</div>
-                    </div>
+                        </div>
                     <div class="earnings-item">
                         <div class="earnings-label">Weekly Earnings</div>
                         <div class="earnings-value" id="weekly-earnings">$31.50</div>
                         <div class="earnings-sol" id="weekly-earnings-sol">0.1309 SOL</div>
                     </div>
-            </div>
-            
+                </div>
+                
                 <!-- Column 3: Long-term Projections -->
                 <div class="earnings-section long-term">
                     <div class="earnings-item">
@@ -1589,9 +1589,9 @@
                         <div class="earnings-value" id="annual-projection">$1,644.20</div>
                         <div class="earnings-sol" id="annual-projection-sol">6.9699 SOL</div>
         </div>
-    </div>
                 </div>
-                
+            </div>
+
                 <!-- Pool Stats Section -->
                 <div class="pool-stats-section">
                     <div class="stats-grid">
@@ -1713,9 +1713,9 @@
                     <div class="burger-line"></div>
                 </button>
                         </div>
-                    </div>
                 </div>
-                
+            </div>
+
     <!-- Sidebar Overlay for Mobile -->
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
     
@@ -1730,9 +1730,9 @@
                 <div class="banner-background">
                     <div class="banner-image">
                         <div class="banner-overlay"></div>
+                    </div>
                 </div>
-            </div>
-
+                
                 <div class="banner-content">
                     <div class="banner-left-section">
                         <h2 class="banner-question">Are You Enjoying the Dashboard?</h2>
