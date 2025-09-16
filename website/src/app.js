@@ -1400,6 +1400,25 @@
     <!-- Sidebar Overlay for Mobile -->
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
     
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <div class="mobile-header-content">
+            <div class="mobile-header-left">
+                <div class="mobile-brand-text">IMG FINANCE</div>
+                <div class="mobile-logo">
+                    <img src="/imgtextlogo.webp" alt="IMG Finance Logo">
+                </div>
+            </div>
+            <div class="mobile-header-right">
+                <button class="burger-menu-btn" id="mobile-menu-btn">
+                    <div class="burger-line"></div>
+                    <div class="burger-line"></div>
+                    <div class="burger-line"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+    
     <div class="pools-page">
         <div class="pools-container">
             <div class="pools-grid">
