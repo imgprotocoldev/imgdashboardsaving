@@ -4207,27 +4207,51 @@ async function fetchSOLPrice() {
     }
 }
 
-// Fetch IMG token pools data from CoinGecko API
+// Fetch IMG token pools data from CoinGecko API - Simple Method
 async function fetchIMGPoolsData() {
     const API_KEY = 'CG-RxzMdLJouiZjJBrSzjwvRGsf';
-    const IMG_TOKEN_ADDRESS = 'znv3FZt2HFAvzYf5LxzVyryh3mBXWuTRRng25gEZAjh';
-    
+    const tokenAddress = "znv3FZt2HFAvzYf5LxzVyryh3mBXWuTRRng25gEZAjh";
+    const network = "solana";
+
+    const url = `https://api.coingecko.com/api/v3/onchain/networks/${network}/tokens/${tokenAddress}/pools`;
+
     try {
-        const response = await fetch(`https://api.coingecko.com/api/v3/onchain/networks/solana/tokens/${IMG_TOKEN_ADDRESS}/pools?include=top_pools&x_cg_demo_api_key=${API_KEY}`, {
+        console.log('🔍 Fetching pools data from:', url);
+        
+        const response = await fetch(url, {
             headers: {
-                'Content-Type': 'application/json'
+                "accept": "application/json",
+                "x-cg-demo-api-key": API_KEY
             }
         });
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const data = await response.json();
-        console.log('CoinGecko pools data:', data);
+        console.log('✅ CoinGecko API response:', data);
+
+        // Log pool details for debugging
+        if (data && data.data && data.data.length > 0) {
+            console.log(`📊 Found ${data.data.length} pools:`);
+            data.data.forEach((pool, index) => {
+                console.log(`Pool ${index + 1}:`, {
+                    address: pool.id,
+                    dex: pool.attributes?.dex_id,
+                    pair: `${pool.attributes?.token0?.symbol || 'Unknown'} / ${pool.attributes?.token1?.symbol || 'Unknown'}`,
+                    volume24h: pool.attributes?.volume_usd?.h24,
+                    volumePercentage: pool.attributes?.volume_usd?.h24_percentage,
+                    liquidity: pool.attributes?.reserve_in_usd
+                });
+            });
+        } else {
+            console.log("❌ No pools found for this token.");
+        }
+
         return data;
     } catch (error) {
-        console.error('Error fetching IMG pools data:', error);
+        console.error("❌ Error fetching IMG pool data:", error);
         return null;
     }
 }
@@ -4262,28 +4286,28 @@ async function loadPoolsData() {
         console.log('First pool attributes:', pools[0].attributes);
     }
     
-    // Map pool data to our pool boxes
+    // Map pool data to our pool boxes - Updated to match actual API response
     const poolMappings = {
         'img-sol-raydium': { 
-            searchTerms: ['SOL', 'solana'], 
+            searchTerms: ['SOL'], 
             dex: 'raydium',
             volumeElement: 'img-sol-volume',
             changeElement: 'img-sol-change'
         },
         'img-bonk-raydium': { 
-            searchTerms: ['BONK', 'bonk'], 
+            searchTerms: ['BONK'], 
             dex: 'raydium',
             volumeElement: 'img-bonk-raydium-volume',
             changeElement: 'img-bonk-raydium-change'
         },
         'img-usdc-raydium': { 
-            searchTerms: ['USDC', 'usdc'], 
+            searchTerms: ['USDC'], 
             dex: 'raydium',
             volumeElement: 'img-usdc-volume',
             changeElement: 'img-usdc-change'
         },
         'img-bonk-orca': { 
-            searchTerms: ['BONK', 'bonk'], 
+            searchTerms: ['BONK'], 
             dex: 'orca',
             volumeElement: 'img-bonk-orca-volume',
             changeElement: 'img-bonk-orca-change'
@@ -4293,37 +4317,60 @@ async function loadPoolsData() {
     // Process each pool
     Object.keys(poolMappings).forEach(poolKey => {
         const mapping = poolMappings[poolKey];
+        console.log(`🔍 Looking for pool: ${poolKey} (${mapping.searchTerms.join('/')} on ${mapping.dex})`);
+        
         const matchingPool = pools.find(pool => {
-            const poolName = pool.attributes?.name?.toLowerCase() || '';
-            const poolId = pool.id?.toLowerCase() || '';
+            const token0Symbol = pool.attributes?.token0?.symbol || '';
+            const token1Symbol = pool.attributes?.token1?.symbol || '';
+            const dexId = pool.attributes?.dex_id || '';
+            const poolName = pool.attributes?.name || '';
             
-            return mapping.searchTerms.some(term => 
-                poolName.includes(term.toLowerCase()) || poolId.includes(term.toLowerCase())
+            console.log(`  Checking pool: ${poolName} (${token0Symbol}/${token1Symbol}) on ${dexId}`);
+            
+            // Check if the pool contains our search terms and matches the DEX
+            const hasMatchingTokens = mapping.searchTerms.some(term => 
+                token0Symbol.toLowerCase().includes(term.toLowerCase()) || 
+                token1Symbol.toLowerCase().includes(term.toLowerCase()) ||
+                poolName.toLowerCase().includes(term.toLowerCase())
             );
+            
+            const hasMatchingDex = mapping.dex === 'raydium' ? 
+                dexId.toLowerCase().includes('raydium') : 
+                dexId.toLowerCase().includes('orca');
+            
+            console.log(`    Token match: ${hasMatchingTokens}, DEX match: ${hasMatchingDex}`);
+            
+            return hasMatchingTokens && hasMatchingDex;
         });
         
         if (matchingPool) {
-            console.log(`Found pool for ${poolKey}:`, matchingPool);
+            console.log(`✅ Found pool for ${poolKey}:`, {
+                dex: matchingPool.attributes?.dex_id,
+                pair: `${matchingPool.attributes?.token0?.symbol} / ${matchingPool.attributes?.token1?.symbol}`,
+                volume: matchingPool.attributes?.volume_usd?.h24
+            });
             
-            // Update volume - try different volume fields from the API response
+            // Update volume - try different volume fields
             const volumeElement = document.getElementById(mapping.volumeElement);
             if (volumeElement) {
-                const volume = matchingPool.attributes?.volume_usd_24h || 
+                const volume = matchingPool.attributes?.volume_usd?.h24 || 
                               matchingPool.attributes?.volume_usd || 
                               matchingPool.attributes?.reserve_in_usd || 0;
                 volumeElement.textContent = formatVolume(volume);
+                console.log(`✅ Updated ${mapping.volumeElement}: ${formatVolume(volume)} (raw: ${volume})`);
             }
             
-            // Update change percentage - try different change fields
+            // Update change percentage - use volume percentage as change
             const changeElement = document.getElementById(mapping.changeElement);
             if (changeElement) {
-                const change = matchingPool.attributes?.price_change_percentage?.h24 || 
-                              matchingPool.attributes?.price_change_percentage_24h || 0;
+                const change = matchingPool.attributes?.volume_usd?.h24_percentage || 
+                              matchingPool.attributes?.price_change_percentage?.h24 || 0;
                 changeElement.textContent = `${change > 0 ? '+' : ''}${change.toFixed(2)}%`;
                 changeElement.className = `change-value ${change > 0 ? 'positive' : change < 0 ? 'negative' : 'neutral'}`;
+                console.log(`✅ Updated ${mapping.changeElement}: ${change.toFixed(2)}% (raw: ${change})`);
             }
         } else {
-            console.log(`No matching pool found for ${poolKey}`);
+            console.log(`❌ No matching pool found for ${poolKey}`);
             // Set fallback values with sample data for testing
             const volumeElement = document.getElementById(mapping.volumeElement);
             const changeElement = document.getElementById(mapping.changeElement);
@@ -4337,6 +4384,7 @@ async function loadPoolsData() {
                     'img-bonk-orca-volume': '$5.3K'
                 };
                 volumeElement.textContent = sampleVolumes[mapping.volumeElement] || 'N/A';
+                console.log(`🔄 Set fallback volume for ${mapping.volumeElement}: ${sampleVolumes[mapping.volumeElement] || 'N/A'}`);
             }
             
             if (changeElement) {
@@ -4350,6 +4398,7 @@ async function loadPoolsData() {
                 const changeText = sampleChanges[mapping.changeElement] || 'N/A';
                 changeElement.textContent = changeText;
                 changeElement.className = `change-value ${changeText.includes('+') ? 'positive' : changeText.includes('-') ? 'negative' : 'neutral'}`;
+                console.log(`🔄 Set fallback change for ${mapping.changeElement}: ${changeText}`);
             }
         }
     });
