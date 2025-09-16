@@ -1427,7 +1427,7 @@
                             <span class="volume-value" id="img-sol-volume">Loading...</span>
                         </div>
                         <div class="pool-change">
-                            <span class="change-label">24H Change</span>
+                            <span class="change-label">24H Price Change</span>
                             <span class="change-value" id="img-sol-change">Loading...</span>
                         </div>
                     </div>
@@ -1452,7 +1452,7 @@
                             <span class="volume-value" id="img-bonk-raydium-volume">Loading...</span>
                         </div>
                         <div class="pool-change">
-                            <span class="change-label">24H Change</span>
+                            <span class="change-label">24H Price Change</span>
                             <span class="change-value" id="img-bonk-raydium-change">Loading...</span>
                         </div>
                     </div>
@@ -1477,7 +1477,7 @@
                             <span class="volume-value" id="img-usdc-volume">Loading...</span>
                         </div>
                         <div class="pool-change">
-                            <span class="change-label">24H Change</span>
+                            <span class="change-label">24H Price Change</span>
                             <span class="change-value" id="img-usdc-change">Loading...</span>
                         </div>
                     </div>
@@ -1502,7 +1502,7 @@
                             <span class="volume-value" id="img-bonk-orca-volume">Loading...</span>
                         </div>
                         <div class="pool-change">
-                            <span class="change-label">24H Change</span>
+                            <span class="change-label">24H Price Change</span>
                             <span class="change-value" id="img-bonk-orca-change">Loading...</span>
                         </div>
                     </div>
@@ -4240,9 +4240,14 @@ async function fetchIMGPoolsData() {
                     address: pool.id,
                     dex: pool.attributes?.dex_id,
                     pair: `${pool.attributes?.token0?.symbol || 'Unknown'} / ${pool.attributes?.token1?.symbol || 'Unknown'}`,
+                    name: pool.attributes?.name,
                     volume24h: pool.attributes?.volume_usd?.h24,
                     volumePercentage: pool.attributes?.volume_usd?.h24_percentage,
-                    liquidity: pool.attributes?.reserve_in_usd
+                    liquidity: pool.attributes?.reserve_in_usd,
+                    priceChange24h: pool.attributes?.price_change_percentage?.h24,
+                    // Log all available fields for debugging
+                    allVolumeFields: pool.attributes?.volume_usd,
+                    allPriceChangeFields: pool.attributes?.price_change_percentage
                 });
             });
         } else {
@@ -4350,24 +4355,28 @@ async function loadPoolsData() {
                 volume: matchingPool.attributes?.volume_usd?.h24
             });
             
-            // Update volume - try different volume fields
+            // Update volume - use the correct 24h volume field
             const volumeElement = document.getElementById(mapping.volumeElement);
             if (volumeElement) {
+                // Try different volume fields to find the correct 24h volume
                 const volume = matchingPool.attributes?.volume_usd?.h24 || 
                               matchingPool.attributes?.volume_usd || 
                               matchingPool.attributes?.reserve_in_usd || 0;
                 volumeElement.textContent = formatVolume(volume);
                 console.log(`✅ Updated ${mapping.volumeElement}: ${formatVolume(volume)} (raw: ${volume})`);
+                console.log(`  Available volume fields:`, matchingPool.attributes?.volume_usd);
             }
             
-            // Update change percentage - use volume percentage as change
+            // Update change percentage - use PRICE change, not volume percentage
             const changeElement = document.getElementById(mapping.changeElement);
             if (changeElement) {
-                const change = matchingPool.attributes?.volume_usd?.h24_percentage || 
-                              matchingPool.attributes?.price_change_percentage?.h24 || 0;
+                // Try different price change fields to find the correct 24h price change
+                const change = matchingPool.attributes?.price_change_percentage?.h24 || 
+                              matchingPool.attributes?.price_change_percentage || 0;
                 changeElement.textContent = `${change > 0 ? '+' : ''}${change.toFixed(2)}%`;
                 changeElement.className = `change-value ${change > 0 ? 'positive' : change < 0 ? 'negative' : 'neutral'}`;
                 console.log(`✅ Updated ${mapping.changeElement}: ${change.toFixed(2)}% (raw: ${change})`);
+                console.log(`  Available price change fields:`, matchingPool.attributes?.price_change_percentage);
             }
         } else {
             console.log(`❌ No matching pool found for ${poolKey}`);
